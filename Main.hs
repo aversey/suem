@@ -19,7 +19,7 @@ config = Config
          <> showDefault
          <> value (8 * 1024 * 1024)
          <> help "Available RAM in bytes" )
-      <*> option auto
+      <*> strOption
           ( long "rom"
          <> short 'r'
          <> metavar "ROM_PATH"
