@@ -1,0 +1,5 @@
+packages:
+- .
+system-ghc: true
+resolver:
+  compiler: ghc-8.8.4

@@ -1,0 +1,20 @@
+name: suem
+version: 0.1.0.0
+synopsis: Suen Emulator
+
+extra-source-files:
+- README
+
+ghc-options: -O2 -Wall -static -optl-static -optl-pthread
+
+dependencies:
+- base >= 4.7 && < 5
+
+library:
+  source-dirs: src
+
+executable:
+  main: Main.hs
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  dependencies:
+  - suem
