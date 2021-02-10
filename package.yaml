@@ -1,6 +1,7 @@
 name: suem
 version: 0.1.0.0
 synopsis: Suen Emulator
+license: OtherLicense
 
 extra-source-files:
 - README
