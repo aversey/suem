@@ -10,6 +10,7 @@ ghc-options: -O2 -Wall -static -optl-static -optl-pthread
 
 dependencies:
 - base >= 4.7 && < 5
+- vector
 - bytestring
 - optparse-applicative
 
