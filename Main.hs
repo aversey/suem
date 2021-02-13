@@ -32,7 +32,7 @@ config = Config
          <> short 'm'
          <> metavar "RAM_SIZE"
          <> showDefault
-         <> value (8 * 1024 * 1024)
+         <> value (8 * 1024 * 1024 - 128 * 1024)
          <> help "Available RAM in bytes" )
       <*> strOption
           ( long "rom"
