@@ -13,6 +13,7 @@ dependencies:
 - vector
 - bytestring
 - optparse-applicative
+- lens
 
 library:
   source-dirs: src
