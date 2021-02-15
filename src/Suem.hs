@@ -3,9 +3,9 @@ module Suem (Config(..), ConfigSocket(..), suem) where
 import qualified Data.Vector.Unboxed as V
 import qualified Data.ByteString as B
 import Data.Word
-import Data.Bits
 import Machine
 import Commands
+import Utils
 
 
 data ConfigSocket = ConfigInet String | ConfigUnix String
@@ -22,35 +22,20 @@ data Config = Config Int      -- frequence
                      (Maybe ConfigSocket)
                      (Maybe ConfigSocket)
 
-boolToInt :: Bool -> Int
-boolToInt True  = 1
-boolToInt False = 0
-
-toBits :: Word16 -> [Int]
-toBits x = map (boolToInt . testBit x) [0..(finiteBitSize x-1)]
-
-fromBits :: [Int] -> Int
-fromBits = foldl (\a b -> 2 * a + b) 0 . reverse
-
 doCommand :: [Int] -> Machine -> Machine
---doCommand [0,1,0,0,1,1,1,0, 0,1,1,0,0,0,0,0] = doReset
+doCommand [0,1,0,0,1,1,1,0, 0,1,1,0,0,0,0,0] = doReset
 doCommand [0,1,0,0,1,1,1,0, 0,1,1,0,0,0,0,1] = doNothing
---doCommand [0,1,0,0,1,1,1,0, 0,1,1,0,0,0,1,0] = doStop
---doCommand [0,1,0,0,1,1,1,0, 0,1,1,0,0,0,1,1] = doRTE
---doCommand [0,1,0,0,1,1,1,0, 0,1,1,0,0,1,0,1] = doRTS
---doCommand [0,1,0,0,1,1,1,0, 0,1,1,0,0,1,1,0] = doTrapV
---doCommand [0,1,0,0,1,1,1,0, 0,1,1,0,0,1,1,1] = doRTR
---doCommand [0,1,0,0,1,0,1,0, 1,1,1,1,1,1,0,0] = doIllegal
---doCommand [0,1,0,0,1,0,1,0, 1,1,a,b,c,d,e,f] =
---    doTAS (fromBits [a,b,c]) (fromBits [d,e,f])
---doCommand [0,1,0,0,1,0,1,0, a,b,c,d,e,f,g,h] =
---    doTST (fromBits [a,b]) (fromBits [c,d,e]) (fromBits [f,g,h])
---doCommand [0,1,0,0,1,0,1,0, 0,1,0,0,a,b,c,d] =
---    doTrap (fromBits [a,b,c,d])
---doCommand [0,1,0,0,1,0,1,0, 0,1,0,1,0,a,b,c] =
---    doLink (fromBits [a,b,c])
-doCommand [0,1,0,0,1,0,1,0, 0,1,0,1,1,a,b,c] =
-    doUnlink (fromBits [a,b,c])
+doCommand [0,1,0,0,1,1,1,0, 0,1,1,0,0,0,1,0] = doStop
+doCommand [0,1,0,0,1,1,1,0, 0,1,1,0,0,0,1,1] = doRTE
+doCommand [0,1,0,0,1,1,1,0, 0,1,1,0,0,1,0,1] = doRTS
+doCommand [0,1,0,0,1,1,1,0, 0,1,1,0,0,1,1,0] = doTrapV
+doCommand [0,1,0,0,1,1,1,0, 0,1,1,0,0,1,1,1] = doRTR
+doCommand [0,1,0,0,1,0,1,0, 1,1,1,1,1,1,0,0] = doIllegal
+doCommand [0,1,0,0,1,0,1,0, 1,1,a,b,c,d,e,f] = doTAS [a,b,c] [d,e,f]
+doCommand [0,1,0,0,1,0,1,0, 0,1,0,0,a,b,c,d] = doTrap [a,b,c,d]
+doCommand [0,1,0,0,1,0,1,0, 0,1,0,1,0,a,b,c] = doLink [a,b,c]
+doCommand [0,1,0,0,1,0,1,0, 0,1,0,1,1,a,b,c] = doUnlink [a,b,c]
+doCommand [0,1,0,0,1,0,1,0, a,b,c,d,e,f,g,h] = doTST [a,b] [c,d,e] [f,g,h]
 doCommand _ = error "Bad command."
 
 runMachine :: Machine -> IO ()
