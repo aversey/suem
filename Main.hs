@@ -1,7 +1,9 @@
+-- This module parses config as passed in arguments and runs Emulator.
 module Main where
 
 import Options.Applicative
 import Suem
+
 
 inet_socket :: String -> Parser ConfigSocket
 inet_socket sock = ConfigInet <$> strOption
@@ -17,6 +19,7 @@ unix_socket sock = ConfigUnix <$> strOption
 
 socket :: String -> Parser (Maybe ConfigSocket)
 socket sock = optional (inet_socket sock <|> unix_socket sock)
+
 
 config :: Parser Config
 config = Config

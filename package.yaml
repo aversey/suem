@@ -6,14 +6,14 @@ license: OtherLicense
 extra-source-files:
 - README
 
-ghc-options: -O2 -Wall -static -optl-static -optl-pthread
+ghc-options: -O2 -static -optl-static -optl-pthread
 
 dependencies:
 - base >= 4.7 && < 5
 - vector
 - bytestring
 - optparse-applicative
-- lens
+- mtl
 
 library:
   source-dirs: src
