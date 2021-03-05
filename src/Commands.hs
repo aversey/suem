@@ -6,205 +6,114 @@ import Machine
 import Utils
 import Data.IORef
 
--- ORICCR
-doORICCR :: Emulator ()
-doORICCR = return () 
 
--- ORISR
+doORICCR :: Emulator ()
+doORICCR = return ()
+
 doORISR :: Emulator ()
 doORISR = return ()
 
--- ORI
-_doORI :: Int -> Int -> Int -> Emulator ()
-_doORI _ _ _ = return ()
-doORI :: [Int] -> [Int] -> [Int] -> Emulator ()
-doORI = args3 _doORI
+doORI :: Int -> Int -> Int -> Emulator ()
+doORI _ _ _ = return ()
 
--- ANDICCR
 doANDICCR :: Emulator ()
 doANDICCR = return ()
 
--- ANDISR
 doANDISR :: Emulator ()
 doANDISR = return ()
 
--- ANDI
-_doANDI :: Int -> Int -> Int -> Emulator ()
-_doANDI _ _ _ = return ()
-doANDI :: [Int] -> [Int] -> [Int] -> Emulator ()
-doANDI = args3 _doANDI
+doANDI :: Int -> Int -> Int -> Emulator ()
+doANDI _ _ _ = return ()
 
--- SUBI
-_doSUBI :: Int -> Int -> Int -> Emulator ()
-_doSUBI _ _ _ = return ()
-doSUBI :: [Int] -> [Int] -> [Int] -> Emulator ()
-doSUBI = args3 _doSUBI
+doSUBI :: Int -> Int -> Int -> Emulator ()
+doSUBI _ _ _ = return ()
 
--- ADDI
-_doADDI :: Int -> Int -> Int -> Emulator ()
-_doADDI _ _ _ = return ()
-doADDI :: [Int] -> [Int] -> [Int] -> Emulator ()
-doADDI = args3 _doADDI
+doADDI :: Int -> Int -> Int -> Emulator ()
+doADDI _ _ _ = return ()
 
--- EORICCR
 doEORICCR :: Emulator ()
 doEORICCR = return ()
 
--- EORISR
 doEORISR :: Emulator ()
 doEORISR = return ()
 
--- EORI
-_doEORI :: Int -> Int -> Int -> Emulator ()
-_doEORI _ _ _ = return ()
-doEORI :: [Int] -> [Int] -> [Int] -> Emulator ()
-doEORI = args3 _doEORI
+doEORI :: Int -> Int -> Int -> Emulator ()
+doEORI _ _ _ = return ()
 
--- CMPI
-_doCMPI :: Int -> Int -> Int -> Emulator ()
-_doCMPI _ _ _ = return ()
-doCMPI :: [Int] -> [Int] -> [Int] -> Emulator ()
-doCMPI = args3 _doCMPI
+doCMPI :: Int -> Int -> Int -> Emulator ()
+doCMPI _ _ _ = return ()
 
--- MOVEP
-_doMOVEP :: Int -> Int -> Int -> Int -> Emulator ()
-_doMOVEP _ _ _ _ = return ()
-doMOVEP :: [Int] -> [Int] -> [Int] -> [Int] -> Emulator ()
-doMOVEP = args4 _doMOVEP
+doMOVEP :: Int -> Int -> Int -> Int -> Emulator ()
+doMOVEP _ _ _ _ = return ()
 
--- BTST
-_doBTST :: Int -> Int -> Int -> Int -> Emulator ()
-_doBTST _ _ _ _ = return ()
-doBTST :: [Int] -> [Int] -> [Int] -> [Int] -> Emulator ()
-doBTST = args4 _doBTST
+doBTST :: Int -> Int -> Int -> Int -> Emulator ()
+doBTST _ _ _ _ = return ()
 
--- BCHG
-_doBCHG :: Int -> Int -> Int -> Int -> Emulator ()
-_doBCHG _ _ _ _ = return ()
-doBCHG :: [Int] -> [Int] -> [Int] -> [Int] -> Emulator ()
-doBCHG = args4 _doBCHG
+doBCHG :: Int -> Int -> Int -> Int -> Emulator ()
+doBCHG _ _ _ _ = return ()
 
--- BCLR
-_doBCLR :: Int -> Int -> Int -> Int -> Emulator ()
-_doBCLR _ _ _ _ = return ()
-doBCLR :: [Int] -> [Int] -> [Int] -> [Int] -> Emulator ()
-doBCLR = args4 _doBCLR
+doBCLR :: Int -> Int -> Int -> Int -> Emulator ()
+doBCLR _ _ _ _ = return ()
 
--- BSET
-_doBSET :: Int -> Int -> Int -> Int -> Emulator ()
-_doBSET _ _ _ _ = return ()
-doBSET :: [Int] -> [Int] -> [Int] -> [Int] -> Emulator ()
-doBSET = args4 _doBSET
+doBSET :: Int -> Int -> Int -> Int -> Emulator ()
+doBSET _ _ _ _ = return ()
 
--- MOVEA
-_doMOVEA :: Int -> Int -> Int -> Int -> Emulator ()
-_doMOVEA _ _ _ _ = return ()
-doMOVEA :: [Int] -> [Int] -> [Int] -> [Int] -> Emulator ()
-doMOVEA = args4 _doMOVEA
+doMOVEA :: Int -> Int -> Int -> Int -> Emulator ()
+doMOVEA _ _ _ _ = return ()
 
--- MOVE
-_doMOVE :: Int -> Int -> Int -> Int -> Int -> Emulator ()
-_doMOVE _ _ _ _ _ = return ()
-doMOVE :: [Int] -> [Int] -> [Int] -> [Int] -> [Int] -> Emulator ()
-doMOVE = args5 _doMOVE
+doMOVE :: Int -> Int -> Int -> Int -> Int -> Emulator ()
+doMOVE _ _ _ _ _ = return ()
 
--- SRMOVE
-_doSRMOVE :: Int -> Int -> Emulator ()
-_doSRMOVE _ _ = return ()
-doSRMOVE :: [Int] -> [Int] -> Emulator ()
-doSRMOVE = args2 _doSRMOVE
+doSRMOVE :: Int -> Int -> Emulator ()
+doSRMOVE _ _ = return ()
 
--- MOVECCR
-_doMOVECCR :: Int -> Int -> Emulator ()
-_doMOVECCR _ _ = return ()
-doMOVECCR :: [Int] -> [Int] -> Emulator ()
-doMOVECCR = args2 _doMOVECCR
+doMOVECCR :: Int -> Int -> Emulator ()
+doMOVECCR _ _ = return ()
 
--- MOVESR
-_doMOVESR :: Int -> Int -> Emulator ()
-_doMOVESR _ _ = return ()
-doMOVESR :: [Int] -> [Int] -> Emulator ()
-doMOVESR = args2 _doMOVESR
+doMOVESR :: Int -> Int -> Emulator ()
+doMOVESR _ _ = return ()
 
--- NEGX
-_doNEGX :: Int -> Int -> Int -> Emulator ()
-_doNEGX _ _ _ = return ()
-doNEGX :: [Int] -> [Int] -> [Int] -> Emulator ()
-doNEGX = args3 _doNEGX
+doNEGX :: Int -> Int -> Int -> Emulator ()
+doNEGX _ _ _ = return ()
 
--- CLR
-_doCLR :: Int -> Int -> Int -> Emulator ()
-_doCLR _ _ _ = return ()
-doCLR :: [Int] -> [Int] -> [Int] -> Emulator ()
-doCLR = args3 _doCLR
+doCLR :: Int -> Int -> Int -> Emulator ()
+doCLR _ _ _ = return ()
 
--- NEG
-_doNEG :: Int -> Int -> Int -> Emulator ()
-_doNEG _ _ _ = return ()
-doNEG :: [Int] -> [Int] -> [Int] -> Emulator ()
-doNEG = args3 _doNEG
+doNEG :: Int -> Int -> Int -> Emulator ()
+doNEG _ _ _ = return ()
 
--- NOT
-_doNOT :: Int -> Int -> Int -> Emulator ()
-_doNOT _ _ _ = return ()
-doNOT :: [Int] -> [Int] -> [Int] -> Emulator ()
-doNOT = args3 _doNOT
+doNOT :: Int -> Int -> Int -> Emulator ()
+doNOT _ _ _ = return ()
 
--- EXT
-_doEXT :: Int -> Int -> Emulator ()
-_doEXT _ _ = return ()
-doEXT :: [Int] -> [Int] -> Emulator ()
-doEXT = args2 _doEXT
+doEXT :: Int -> Int -> Emulator ()
+doEXT _ _ = return ()
 
--- NBCD
-_doNBCD :: Int -> Int -> Emulator ()
-_doNBCD _ _ = return ()
-doNBCD :: [Int] -> [Int] -> Emulator ()
-doNBCD = args2 _doNBCD
+doNBCD :: Int -> Int -> Emulator ()
+doNBCD _ _ = return ()
 
--- SWAP
-_doSWAP :: Int -> Emulator ()
-_doSWAP _ = return ()
-doSWAP :: [Int] -> Emulator ()
-doSWAP = _doSWAP . fromBits
+doSWAP :: Int -> Emulator ()
+doSWAP _ = return ()
 
--- PEA
-_doPEA :: Int -> Int -> Emulator ()
-_doPEA _ _ = return () 
-doPEA :: [Int] -> [Int] -> Emulator ()
-doPEA = args2 _doPEA
+doPEA :: Int -> Int -> Emulator ()
+doPEA _ _ = return () 
 
--- ILLEGAL
 doILLEGAL :: Emulator ()
 doILLEGAL = return ()
 
--- TAS
-_doTAS :: Int -> Int -> Emulator ()
-_doTAS _ _ = return ()
-doTAS :: [Int] -> [Int] -> Emulator ()
-doTAS = args2 _doTAS
+doTAS :: Int -> Int -> Emulator ()
+doTAS _ _ = return ()
 
--- TST
-_doTST :: Int -> Int -> Int -> Emulator ()
-_doTST _ _ _ = return ()
-doTST :: [Int] -> [Int] -> [Int] -> Emulator ()
-doTST = args3 _doTST
+doTST :: Int -> Int -> Int -> Emulator ()
+doTST _ _ _ = return ()
 
--- TRAP
-_doTRAP :: Int -> Emulator ()
-_doTRAP _ = return ()
-doTRAP :: [Int] -> Emulator ()
-doTRAP = _doTRAP . fromBits
+doTRAP :: Int -> Emulator ()
+doTRAP _ = return ()
 
--- LINK
-_doLINK :: Int -> Emulator ()
-_doLINK _ = return ()
-doLINK :: [Int] -> Emulator ()
-doLINK = _doLINK . fromBits
+doLINK :: Int -> Emulator ()
+doLINK _ = return ()
 
--- UNLK
-_doUNLK :: Int -> Emulator ()
-_doUNLK a = do
+doUNLK :: Int -> Emulator ()
+doUNLK a = do
     addr <- readA a
     val <- getLong addr
     with pc $ \pc -> do
@@ -215,281 +124,149 @@ _doUNLK a = do
         writeIORef sp (val + 4)
     else with usp $ \sp -> do
         writeIORef sp (val + 4)
-doUNLK :: [Int] -> Emulator ()
-doUNLK = _doUNLK . fromBits
 
--- MOVEUSP
-_doMOVEUSP :: Int -> Int -> Emulator ()
-_doMOVEUSP _ _ = return ()
-doMOVEUSP :: [Int] -> [Int] -> Emulator ()
-doMOVEUSP = args2 _doMOVEUSP
+doMOVEUSP :: Int -> Int -> Emulator ()
+doMOVEUSP _ _ = return ()
 
--- RESET
 doRESET :: Emulator ()
 doRESET = return ()
 
--- NOP
 doNOP :: Emulator ()
 doNOP = with pc $ \pc -> do
     pcval <- readIORef pc
     writeIORef pc (pcval + 2)
 
--- STOP
 doSTOP :: Emulator ()
 doSTOP = return ()
 
--- RTE
 doRTE :: Emulator ()
 doRTE = return ()
 
--- RTS
 doRTS :: Emulator ()
 doRTS = return ()
 
--- TRAPV
 doTRAPV :: Emulator ()
 doTRAPV = return ()
 
--- RTR
 doRTR :: Emulator ()
 doRTR = return ()
 
--- JSR
-_doJSR :: Int -> Int -> Emulator ()
-_doJSR _ _ = return () 
-doJSR :: [Int] -> [Int] -> Emulator ()
-doJSR = args2 _doJSR
+doJSR :: Int -> Int -> Emulator ()
+doJSR _ _ = return () 
 
--- JMP
-_doJMP :: Int -> Int -> Emulator ()
-_doJMP _ _ = return ()
-doJMP :: [Int] -> [Int] -> Emulator ()
-doJMP = args2 _doJMP
+doJMP :: Int -> Int -> Emulator ()
+doJMP _ _ = return ()
 
--- MOVEM
-_doMOVEM :: Int -> Int -> Int -> Int -> Emulator ()
-_doMOVEM _ _ _ _ = return ()
-doMOVEM :: [Int] -> [Int] -> [Int] -> [Int] -> Emulator ()
-doMOVEM = args4 _doMOVEM
+doMOVEM :: Int -> Int -> Int -> Int -> Emulator ()
+doMOVEM _ _ _ _ = return ()
 
--- LEA
-_doLEA :: Int -> Int -> Int -> Emulator ()
-_doLEA _ _ _ = return ()
-doLEA :: [Int] -> [Int] -> [Int] -> Emulator ()
-doLEA = args3 _doLEA
+doLEA :: Int -> Int -> Int -> Emulator ()
+doLEA _ _ _ = return ()
 
--- CHK
-_doCHK :: Int -> Int -> Int -> Emulator ()
-_doCHK _ _ _ = return ()
-doCHK :: [Int] -> [Int] -> [Int] -> Emulator ()
-doCHK = args3 _doCHK
+doCHK :: Int -> Int -> Int -> Emulator ()
+doCHK _ _ _ = return ()
 
--- DBcc
-_doDBcc :: Int -> Int -> Emulator ()
-_doDBcc _ _ = return ()
-doDBcc :: [Int] -> [Int] -> Emulator ()
-doDBcc = args2 _doDBcc
+doDBcc :: Int -> Int -> Emulator ()
+doDBcc _ _ = return ()
 
--- Scc
-_doScc :: Int -> Int -> Int -> Emulator ()
-_doScc _ _ _ = return ()
-doScc :: [Int] -> [Int] -> [Int] -> Emulator ()
-doScc = args3 _doScc
+doScc :: Int -> Int -> Int -> Emulator ()
+doScc _ _ _ = return ()
 
--- ADDQ
-_doADDQ :: Int -> Int -> Int -> Int -> Emulator ()
-_doADDQ _ _ _ _ = return ()
-doADDQ :: [Int] -> [Int] -> [Int] -> [Int] -> Emulator ()
-doADDQ = args4 _doADDQ
+doADDQ :: Int -> Int -> Int -> Int -> Emulator ()
+doADDQ _ _ _ _ = return ()
 
--- SUBQ
-_doSUBQ :: Int -> Int -> Int -> Int -> Emulator ()
-_doSUBQ _ _ _ _ = return ()
-doSUBQ :: [Int] -> [Int] -> [Int] -> [Int] -> Emulator ()
-doSUBQ = args4 _doSUBQ
+doSUBQ :: Int -> Int -> Int -> Int -> Emulator ()
+doSUBQ _ _ _ _ = return ()
 
--- BRA
-_doBRA :: Int -> Emulator ()
-_doBRA _ = return ()
-doBRA :: [Int] -> Emulator ()
-doBRA = _doBRA . fromBits
+doBRA :: Int -> Emulator ()
+doBRA _ = return ()
 
--- BSR
-_doBSR :: Int -> Emulator ()
-_doBSR _ = return ()
-doBSR :: [Int] -> Emulator ()
-doBSR = _doBSR . fromBits
+doBSR :: Int -> Emulator ()
+doBSR _ = return ()
 
--- Bcc
-_doBcc :: Int -> Int -> Emulator ()
-_doBcc _ _ = return () 
-doBcc :: [Int] -> [Int] -> Emulator ()
-doBcc = args2 _doBcc
+doBcc :: Int -> Int -> Emulator ()
+doBcc _ _ = return () 
 
--- MOVEQ
-_doMOVEQ :: Int -> Int -> Emulator ()
-_doMOVEQ _ _ = return ()
-doMOVEQ :: [Int] -> [Int] -> Emulator ()
-doMOVEQ = args2 _doMOVEQ
+doMOVEQ :: Int -> Int -> Emulator ()
+doMOVEQ _ _ = return ()
 
--- DIVU
-_doDIVU :: Int -> Int -> Int -> Emulator ()
-_doDIVU _ _ _ = return ()
-doDIVU :: [Int] -> [Int] -> [Int] -> Emulator ()
-doDIVU = args3 _doDIVU
+doDIVU :: Int -> Int -> Int -> Emulator ()
+doDIVU _ _ _ = return ()
 
--- DIVS
-_doDIVS :: Int -> Int -> Int -> Emulator ()
-_doDIVS _ _ _ = return ()
-doDIVS :: [Int] -> [Int] -> [Int] -> Emulator ()
-doDIVS = args3 _doDIVS
+doDIVS :: Int -> Int -> Int -> Emulator ()
+doDIVS _ _ _ = return ()
 
--- SBCD
-_doSBCD :: Int -> Int -> Int -> Emulator ()
-_doSBCD _ _ _ = return ()
-doSBCD :: [Int] -> [Int] -> [Int] -> Emulator ()
-doSBCD = args3 _doSBCD
+doSBCD :: Int -> Int -> Int -> Emulator ()
+doSBCD _ _ _ = return ()
 
--- OR
-_doOR :: Int -> Int -> Int -> Int -> Int -> Emulator ()
-_doOR _ _ _ _ _ = return ()
-doOR :: [Int] -> [Int] -> [Int] -> [Int] -> [Int] -> Emulator ()
-doOR = args5 _doOR
+doOR :: Int -> Int -> Int -> Int -> Int -> Emulator ()
+doOR _ _ _ _ _ = return ()
 
--- SUBA
-_doSUBA :: Int -> Int -> Int -> Int -> Emulator ()
-_doSUBA _ _ _ _ = return ()
-doSUBA :: [Int] -> [Int] -> [Int] -> [Int] -> Emulator ()
-doSUBA = args4 _doSUBA
+doSUBA :: Int -> Int -> Int -> Int -> Emulator ()
+doSUBA _ _ _ _ = return ()
 
--- SUBX
-_doSUBX :: Int -> Int -> Int -> Int -> Emulator ()
-_doSUBX _ _ _ _ = return ()
-doSUBX :: [Int] -> [Int] -> [Int] -> [Int] -> Emulator ()
-doSUBX = args4 _doSUBX
+doSUBX :: Int -> Int -> Int -> Int -> Emulator ()
+doSUBX _ _ _ _ = return ()
 
--- SUB
-_doSUB :: Int -> Int -> Int -> Int -> Int -> Emulator ()
-_doSUB _ _ _ _ _ = return ()
-doSUB :: [Int] -> [Int] -> [Int] -> [Int] -> [Int] -> Emulator ()
-doSUB = args5 _doSUB
+doSUB :: Int -> Int -> Int -> Int -> Int -> Emulator ()
+doSUB _ _ _ _ _ = return ()
 
--- CMPA
-_doCMPA :: Int -> Int -> Int -> Int -> Emulator ()
-_doCMPA _ _ _ _ = return ()
-doCMPA :: [Int] -> [Int] -> [Int] -> [Int] -> Emulator ()
-doCMPA = args4 _doCMPA
+doCMPA :: Int -> Int -> Int -> Int -> Emulator ()
+doCMPA _ _ _ _ = return ()
 
--- CMP
-_doCMP :: Int -> Int -> Int -> Int -> Emulator ()
-_doCMP _ _ _ _ = return ()
-doCMP :: [Int] -> [Int] -> [Int] -> [Int] -> Emulator ()
-doCMP = args4 _doCMP
+doCMP :: Int -> Int -> Int -> Int -> Emulator ()
+doCMP _ _ _ _ = return ()
 
--- CMPM
-_doCMPM :: Int -> Int -> Int -> Emulator ()
-_doCMPM _ _ _ = return () 
-doCMPM :: [Int] -> [Int] -> [Int] -> Emulator ()
-doCMPM = args3 _doCMPM 
+doCMPM :: Int -> Int -> Int -> Emulator ()
+doCMPM _ _ _ = return () 
 
--- EOR
-_doEOR :: Int -> Int -> Int -> Int -> Emulator ()
-_doEOR _ _ _ _ = return ()
-doEOR :: [Int] -> [Int] -> [Int] -> [Int] -> Emulator ()
-doEOR = args4 _doEOR
+doEOR :: Int -> Int -> Int -> Int -> Emulator ()
+doEOR _ _ _ _ = return ()
 
--- MULU
-_doMULU :: Int -> Int -> Int -> Emulator ()
-_doMULU _ _ _ = return ()
-doMULU :: [Int] -> [Int] -> [Int] -> Emulator ()
-doMULU = args3 _doMULU
+doMULU :: Int -> Int -> Int -> Emulator ()
+doMULU _ _ _ = return ()
 
--- MULS
-_doMULS :: Int -> Int -> Int -> Emulator ()
-_doMULS _ _ _ = return ()
-doMULS :: [Int] -> [Int] -> [Int] -> Emulator ()
-doMULS = args3 _doMULS
+doMULS :: Int -> Int -> Int -> Emulator ()
+doMULS _ _ _ = return ()
 
--- ABCD
-_doABCD :: Int -> Int -> Int -> Emulator ()
-_doABCD _ _ _ = return ()
-doABCD :: [Int] -> [Int] -> [Int] -> Emulator ()
-doABCD = args3 _doABCD
+doABCD :: Int -> Int -> Int -> Emulator ()
+doABCD _ _ _ = return ()
 
--- EXG
-_doEXG :: Int -> Int -> Int -> Int -> Emulator ()
-_doEXG _ _ _ _ = return ()
-doEXG :: [Int] -> [Int] -> [Int] -> [Int] -> Emulator ()
-doEXG = args4 _doEXG
+doEXG :: Int -> Int -> Int -> Int -> Emulator ()
+doEXG _ _ _ _ = return ()
 
--- AND
-_doAND :: Int -> Int -> Int -> Int -> Int -> Emulator ()
-_doAND _ _ _ _ _ = return ()
-doAND :: [Int] -> [Int] -> [Int] -> [Int] -> [Int] -> Emulator ()
-doAND = args5 _doAND
+doAND :: Int -> Int -> Int -> Int -> Int -> Emulator ()
+doAND _ _ _ _ _ = return ()
 
--- ADDA
-_doADDA :: Int -> Int -> Int -> Int -> Emulator ()
-_doADDA _ _ _ _ = return ()
-doADDA :: [Int] -> [Int] -> [Int] -> [Int] -> Emulator ()
-doADDA = args4 _doADDA
+doADDA :: Int -> Int -> Int -> Int -> Emulator ()
+doADDA _ _ _ _ = return ()
 
--- ADDX
-_doADDX :: Int -> Int -> Int -> Int -> Emulator ()
-_doADDX _ _ _ _ = return () 
-doADDX :: [Int] -> [Int] -> [Int] -> [Int] -> Emulator ()
-doADDX = args4 _doADDX
+doADDX :: Int -> Int -> Int -> Int -> Emulator ()
+doADDX _ _ _ _ = return () 
 
--- ADD
-_doADD :: Int -> Int -> Int -> Int -> Int -> Emulator ()
-_doADD _ _ _ _ _ = return () 
-doADD :: [Int] -> [Int] -> [Int] -> [Int] -> [Int] -> Emulator ()
-doADD = args5 _doADD
+doADD :: Int -> Int -> Int -> Int -> Int -> Emulator ()
+doADD _ _ _ _ _ = return () 
 
--- ASD
-_doASD :: Int -> Int -> Int -> Emulator ()
-_doASD _ _ _ = return ()
-doASD :: [Int] -> [Int] -> [Int] -> Emulator ()
-doASD = args3 _doASD
+doASD :: Int -> Int -> Int -> Emulator ()
+doASD _ _ _ = return ()
 
--- LSD
-_doLSD :: Int -> Int -> Int -> Emulator ()
-_doLSD _ _ _ = return ()
-doLSD :: [Int] -> [Int] -> [Int] -> Emulator ()
-doLSD = args3 _doLSD
+doLSD :: Int -> Int -> Int -> Emulator ()
+doLSD _ _ _ = return ()
 
--- ROXd
-_doROXd :: Int -> Int -> Int -> Emulator ()
-_doROXd _ _ _ = return ()
-doROXd :: [Int] -> [Int] -> [Int] -> Emulator ()
-doROXd = args3 _doROXd
+doROXd :: Int -> Int -> Int -> Emulator ()
+doROXd _ _ _ = return ()
 
--- ROd
-_doROd :: Int -> Int -> Int -> Emulator ()
-_doROd _ _ _ = return ()
-doROd :: [Int] -> [Int] -> [Int] -> Emulator ()
-doROd = args3 _doROd 
+doROd :: Int -> Int -> Int -> Emulator ()
+doROd _ _ _ = return ()
 
--- ADSR
-_doADSR :: Int -> Int -> Int -> Int -> Int -> Emulator ()
-_doADSR _ _ _ _ _ = return ()
-doADSR :: [Int] -> [Int] -> [Int] -> [Int] -> [Int] -> Emulator ()
-doADSR = args5 _doADSR
+doADSR :: Int -> Int -> Int -> Int -> Int -> Emulator ()
+doADSR _ _ _ _ _ = return ()
 
--- LSDR
-_doLSDR :: Int -> Int -> Int -> Int -> Int -> Emulator ()
-_doLSDR _ _ _ _ _ = return () 
-doLSDR :: [Int] -> [Int] -> [Int] -> [Int] -> [Int] -> Emulator ()
-doLSDR = args5 _doLSDR
+doLSDR :: Int -> Int -> Int -> Int -> Int -> Emulator ()
+doLSDR _ _ _ _ _ = return () 
 
--- ROXdR
-_doROXdR :: Int -> Int -> Int -> Int -> Int -> Emulator ()
-_doROXdR _ _ _ _ _ = return ()
-doROXdR :: [Int] -> [Int] -> [Int] -> [Int] -> [Int] -> Emulator ()
-doROXdR = args5 _doROXdR
+doROXdR :: Int -> Int -> Int -> Int -> Int -> Emulator ()
+doROXdR _ _ _ _ _ = return ()
 
--- ROdR
-_doROdR :: Int -> Int -> Int -> Int -> Int -> Emulator ()
-_doROdR _ _ _ _ _ = return ()
-doROdR :: [Int] -> [Int] -> [Int] -> [Int] -> [Int] -> Emulator ()
-doROdR = args5 _doROdR
+doROdR :: Int -> Int -> Int -> Int -> Int -> Emulator ()
+doROdR _ _ _ _ _ = return ()
