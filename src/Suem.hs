@@ -309,10 +309,10 @@ doCommand cmd
     | (extractBits cmd [0..3]) == 0b1101 &&
       (extractBits cmd [7]) == 0b1 &&
       (extractBits cmd [10..11]) == 0b00 =
-        doAND (extractBits cmd [4..6])
-              (extractBits cmd [8..9])
-              (extractBits cmd [12])
-              (extractBits cmd [13..15])
+        doADDX (extractBits cmd [4..6])
+               (extractBits cmd [8..9])
+               (extractBits cmd [12])
+               (extractBits cmd [13..15])
     | (extractBits cmd [0..3]) == 0b1101 =
         doADD (extractBits cmd [4..6])
               (extractBits cmd [7])
