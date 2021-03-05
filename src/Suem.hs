@@ -15,7 +15,7 @@ import Commands
 import Utils
 
 
--------------------------------------------------------------------------------
+------------------------------------------------------------------------------
 -- Main loop and command deciphering.
 
 doCommand :: Word16 -> Emulator ()
@@ -229,33 +229,144 @@ doCommand cmd
              (extractBits cmd [8..9])
              (extractBits cmd [10..12])
              (extractBits cmd [13..15])
--- doCommand [1,0,0,1,u,v,w,t, 1,1,a,b,c,x,y,z] = doSUBA [u,v,w] [t] [a,b,c] [x,y,z]
--- doCommand [1,0,0,1,u,v,w,1, i,j,0,0,t,x,y,z] = doSUBX [u,v,w] [i,j] [t] [x,y,z]
--- doCommand [1,0,0,1,u,v,w,t, i,j,a,b,c,x,y,z] = doSUB [u,v,w] [t] [i,j] [a,b,c] [x,y,z]
-
--- doCommand [1,0,1,1,u,v,w,t, 1,1,a,b,c,x,y,z] = doCMPA [u,v,w] [t] [a,b,c] [x,y,z]
--- doCommand [1,0,1,1,u,v,w,0, i,j,a,b,c,x,y,z] = doCMP [u,v,w] [i,j] [a,b,c] [x,y,z]
--- doCommand [1,0,1,1,u,v,w,1, i,j,0,0,1,x,y,z] = doCMPM [u,v,w] [i,j] [x,y,z]
--- doCommand [1,0,1,1,u,v,w,1, i,j,a,b,c,x,y,z] = doEOR [u,v,w] [i,j] [a,b,c] [x,y,z]
-
--- doCommand [1,1,0,0,u,v,w,0, 1,1,a,b,c,x,y,z] = doMULU [u,v,w] [a,b,c] [x,y,z]
--- doCommand [1,1,0,0,u,v,w,1, 1,1,a,b,c,x,y,z] = doMULS [u,v,w] [a,b,c] [x,y,z]
--- doCommand [1,1,0,0,u,v,w,1, 0,0,0,0,t,x,y,z] = doABCD [u,v,w] [t] [x,y,z]
--- doCommand [1,1,0,0,u,v,w,1, i,j,0,0,t,x,y,z] = doEXG [u,v,w] [i,j] [t] [x,y,z]
--- doCommand [1,1,0,0,u,v,w,t, i,j,a,b,c,x,y,z] = doAND [u,v,w] [t] [i,j] [a,b,c] [x,y,z]
-
--- doCommand [1,1,0,1,u,v,w,t, 1,1,a,b,c,x,y,z] = doADDA [u,v,w] [t] [a,b,c] [x,y,z]
--- doCommand [1,1,0,1,u,v,w,1, i,j,0,0,t,x,y,z] = doADDX [u,v,w] [i,j] [t] [x,y,z]
--- doCommand [1,1,0,1,u,v,w,t, i,j,a,b,c,x,y,z] = doADD [u,v,w] [t] [i,j] [a,b,c] [x,y,z]
-
--- doCommand [1,1,1,0,0,0,0,t, 1,1,a,b,c,x,y,z] = doASD [t] [a,b,c] [x,y,z]
--- doCommand [1,1,1,0,0,0,1,t, 1,1,a,b,c,x,y,z] = doLSD [t] [a,b,c] [x,y,z]
--- doCommand [1,1,1,0,0,1,0,t, 1,1,a,b,c,x,y,z] = doROXd [t] [a,b,c] [x,y,z]
--- doCommand [1,1,1,0,0,1,1,t, 1,1,a,b,c,x,y,z] = doROd [t] [a,b,c] [x,y,z]
--- doCommand [1,1,1,0,u,v,w,t, i,j,a,0,0,x,y,z] = doADSR [u,v,w] [t] [i,j] [a] [x,y,z]
--- doCommand [1,1,1,0,u,v,w,t, i,j,a,0,1,x,y,z] = doLSDR [u,v,w] [t] [i,j] [a] [x,y,z]
--- doCommand [1,1,1,0,u,v,w,t, i,j,a,1,0,x,y,z] = doROXdR [u,v,w] [t] [i,j] [a] [x,y,z]
--- doCommand [1,1,1,0,u,v,w,t, i,j,a,1,1,x,y,z] = doROdR [u,v,w] [t] [i,j] [a] [x,y,z]
+    | (extractBits cmd [0..3]) == 0b1001 &&
+      (extractBits cmd [8..9]) == 0b11 =
+        doSUBA (extractBits cmd [4..6])
+               (extractBits cmd [7])
+               (extractBits cmd [10..12])
+               (extractBits cmd [13..15])
+    | (extractBits cmd [0..3]) == 0b1001 &&
+      (extractBits cmd [7]) == 0b1 &&
+      (extractBits cmd [10..11]) == 0b00 =
+        doSUBX (extractBits cmd [4..6])
+               (extractBits cmd [8..9])
+               (extractBits cmd [12])
+               (extractBits cmd [13..15])
+    | (extractBits cmd [0..3]) == 0b1001 =
+        doSUB (extractBits cmd [4..6])
+              (extractBits cmd [7])
+              (extractBits cmd [8..9])
+              (extractBits cmd [10..12])
+              (extractBits cmd [13..15])
+    | (extractBits cmd [0..3]) == 0b1011 &&
+      (extractBits cmd [8..9]) == 0b11 =
+        doCMPA (extractBits cmd [4..6])
+               (extractBits cmd [7])
+               (extractBits cmd [10..12])
+               (extractBits cmd [13..15])
+    | (extractBits cmd [0..3]) == 0b1011 &&
+      (extractBits cmd [7]) == 0b0 =
+        doCMP (extractBits cmd [4..6])
+              (extractBits cmd [8..9])
+              (extractBits cmd [10..12])
+              (extractBits cmd [13..15])
+    | (extractBits cmd [0..3]) == 0b1011 &&
+      (extractBits cmd [7]) == 0b1 &&
+      (extractBits cmd [10..12]) == 0b001 =
+        doCMPM (extractBits cmd [4..6])
+               (extractBits cmd [8..9])
+               (extractBits cmd [13..15])
+    | (extractBits cmd [0..3]) == 0b1011 &&
+      (extractBits cmd [7]) == 0b1 =
+        doEOR (extractBits cmd [4..6])
+              (extractBits cmd [8..9])
+              (extractBits cmd [10..12])
+              (extractBits cmd [13..15])
+    | (extractBits cmd [0..3]) == 0b1100 &&
+      (extractBits cmd [7..9]) == 0b011 =
+        doMULU (extractBits cmd [4..6])
+               (extractBits cmd [10..12])
+               (extractBits cmd [13..15])
+    | (extractBits cmd [0..3]) == 0b1100 &&
+      (extractBits cmd [7..9]) == 0b111 =
+        doMULS (extractBits cmd [4..6])
+               (extractBits cmd [10..12])
+               (extractBits cmd [13..15])
+    | (extractBits cmd [0..3]) == 0b1100 &&
+      (extractBits cmd [7..11]) == 0b10000 =
+        doABCD (extractBits cmd [4..6])
+               (extractBits cmd [12])
+               (extractBits cmd [13..15])
+    | (extractBits cmd [0..3]) == 0b1100 &&
+      (extractBits cmd [7]) == 0b1 &&
+      (extractBits cmd [10..11]) == 0b00 =
+        doEXG (extractBits cmd [4..6])
+              (extractBits cmd [8..9])
+              (extractBits cmd [12])
+              (extractBits cmd [13..15])
+    | (extractBits cmd [0..3]) == 0b1100 =
+        doAND (extractBits cmd [4..6])
+              (extractBits cmd [7])
+              (extractBits cmd [8..9])
+              (extractBits cmd [10..12])
+              (extractBits cmd [13..15])
+    | (extractBits cmd [0..3]) == 0b1101 &&
+      (extractBits cmd [8..9]) == 0b11 =
+        doADDA (extractBits cmd [4..6])
+               (extractBits cmd [7])
+               (extractBits cmd [10..12])
+               (extractBits cmd [13..15])
+    | (extractBits cmd [0..3]) == 0b1101 &&
+      (extractBits cmd [7]) == 0b1 &&
+      (extractBits cmd [10..11]) == 0b00 =
+        doAND (extractBits cmd [4..6])
+              (extractBits cmd [8..9])
+              (extractBits cmd [12])
+              (extractBits cmd [13..15])
+    | (extractBits cmd [0..3]) == 0b1101 =
+        doADD (extractBits cmd [4..6])
+              (extractBits cmd [7])
+              (extractBits cmd [8..9])
+              (extractBits cmd [10..12])
+              (extractBits cmd [13..15])
+    | (extractBits cmd [0..6]) == 0b1110000 &&
+      (extractBits cmd [8..9]) == 0b11 =
+        doASD (extractBits cmd [7])
+              (extractBits cmd [10..12])
+              (extractBits cmd [13..15])
+    | (extractBits cmd [0..6]) == 0b1110001 &&
+      (extractBits cmd [8..9]) == 0b11 =
+        doLSD (extractBits cmd [7])
+              (extractBits cmd [10..12])
+              (extractBits cmd [13..15])
+    | (extractBits cmd [0..6]) == 0b1110010 &&
+      (extractBits cmd [8..9]) == 0b11 =
+        doROXd (extractBits cmd [7])
+               (extractBits cmd [10..12])
+               (extractBits cmd [13..15])
+    | (extractBits cmd [0..6]) == 0b1110011 &&
+      (extractBits cmd [8..9]) == 0b11 =
+        doROd (extractBits cmd [7])
+              (extractBits cmd [10..12])
+              (extractBits cmd [13..15])
+    | (extractBits cmd [0..3]) == 0b1110 &&
+      (extractBits cmd [11..12]) == 0b00 =
+        doADSR (extractBits cmd [4..6])
+               (extractBits cmd [7])
+               (extractBits cmd [8..9])
+               (extractBits cmd [10])
+               (extractBits cmd [13..15])
+    | (extractBits cmd [0..3]) == 0b1110 &&
+      (extractBits cmd [11..12]) == 0b01 =
+        doLSDR (extractBits cmd [4..6])
+               (extractBits cmd [7])
+               (extractBits cmd [8..9])
+               (extractBits cmd [10])
+               (extractBits cmd [13..15])
+    | (extractBits cmd [0..3]) == 0b1110 &&
+      (extractBits cmd [11..12]) == 0b10 =
+        doROXdR (extractBits cmd [4..6])
+                (extractBits cmd [7])
+                (extractBits cmd [8..9])
+                (extractBits cmd [10])
+                (extractBits cmd [13..15])
+    | (extractBits cmd [0..3]) == 0b1110 &&
+      (extractBits cmd [11..12]) == 0b11 =
+        doROdR (extractBits cmd [4..6])
+               (extractBits cmd [7])
+               (extractBits cmd [8..9])
+               (extractBits cmd [10])
+               (extractBits cmd [13..15])
     | otherwise = error "Bad command."
 
 runMachine :: Emulator ()
@@ -265,7 +376,7 @@ runMachine = forM_ [0..] $ \_ -> do
     doCommand cmd
 
 
--------------------------------------------------------------------------------
+------------------------------------------------------------------------------
 -- Config and start of execution based on the config.
 
 data ConfigSocket = ConfigInet String | ConfigUnix String
