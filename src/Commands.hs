@@ -95,7 +95,7 @@ doSWAP :: Int -> Emulator ()
 doSWAP _ = return ()
 
 doPEA :: Int -> Int -> Emulator ()
-doPEA _ _ = return () 
+doPEA _ _ = return ()
 
 doILLEGAL :: Emulator ()
 doILLEGAL = return ()
@@ -152,7 +152,7 @@ doRTR :: Emulator ()
 doRTR = return ()
 
 doJSR :: Int -> Int -> Emulator ()
-doJSR _ _ = return () 
+doJSR _ _ = return ()
 
 doJMP :: Int -> Int -> Emulator ()
 doJMP _ _ = return ()
@@ -185,7 +185,7 @@ doBSR :: Int -> Emulator ()
 doBSR _ = return ()
 
 doBcc :: Int -> Int -> Emulator ()
-doBcc _ _ = return () 
+doBcc _ _ = return ()
 
 doMOVEQ :: Int -> Int -> Emulator ()
 doMOVEQ _ _ = return ()
@@ -218,7 +218,7 @@ doCMP :: Int -> Int -> Int -> Int -> Emulator ()
 doCMP _ _ _ _ = return ()
 
 doCMPM :: Int -> Int -> Int -> Emulator ()
-doCMPM _ _ _ = return () 
+doCMPM _ _ _ = return ()
 
 doEOR :: Int -> Int -> Int -> Int -> Emulator ()
 doEOR _ _ _ _ = return ()
@@ -242,10 +242,10 @@ doADDA :: Int -> Int -> Int -> Int -> Emulator ()
 doADDA _ _ _ _ = return ()
 
 doADDX :: Int -> Int -> Int -> Int -> Emulator ()
-doADDX _ _ _ _ = return () 
+doADDX _ _ _ _ = return ()
 
 doADD :: Int -> Int -> Int -> Int -> Int -> Emulator ()
-doADD _ _ _ _ _ = return () 
+doADD _ _ _ _ _ = return ()
 
 doASD :: Int -> Int -> Int -> Emulator ()
 doASD _ _ _ = return ()
@@ -263,7 +263,7 @@ doADSR :: Int -> Int -> Int -> Int -> Int -> Emulator ()
 doADSR _ _ _ _ _ = return ()
 
 doLSDR :: Int -> Int -> Int -> Int -> Int -> Emulator ()
-doLSDR _ _ _ _ _ = return () 
+doLSDR _ _ _ _ _ = return ()
 
 doROXdR :: Int -> Int -> Int -> Int -> Int -> Emulator ()
 doROXdR _ _ _ _ _ = return ()
