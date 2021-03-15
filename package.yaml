@@ -14,6 +14,8 @@ dependencies:
 - bytestring
 - optparse-applicative
 - mtl
+- network
+- iproute
 
 library:
   source-dirs: src

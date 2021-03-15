@@ -10,9 +10,12 @@ import Data.Word
 import Data.IORef
 import Data.Foldable
 import Control.Monad.Reader (runReaderT)
+import Data.IP
+import Network
 import Machine
 import Commands
 import Utils
+import Device
 
 
 ------------------------------------------------------------------------------
@@ -374,6 +377,7 @@ runMachine = forM_ [0..] $ \_ -> do
     pc <- with pc $ \pc -> readIORef pc
     cmd <- getWord $ fromIntegral pc
     doCommand cmd
+    checkInteruptsFromDevices
 
 
 ------------------------------------------------------------------------------
@@ -393,8 +397,27 @@ data Config = Config Int      -- frequence
                      (Maybe ConfigSocket)
                      (Maybe ConfigSocket)
 
-makeMachine :: VM.IOVector Byte -> V.Vector Byte -> IO Machine
-makeMachine ramData romData = do
+ipString :: String -> Word32
+ipString = sum . map (\(n,o) -> toInteger o * 256 ^ n) . zip [0..]
+         . reverse . fromIPv4 . read
+
+makeSocket :: ConfigSocket -> Socket
+makeSocket (ConfigUnix a) =
+    sock <- socket AF_UNIX Stream defaultProtocol
+    Network.Socket.bind sock $ SockAddrUnix a
+makeSocket (ConfigInet a) =
+    sock <- socket AF_INET Stream defaultProtocol
+    Network.Socket.bind sock $ SockAddrInet
+                                (ipString    $ takeWhile (/= ':') a)
+                                (read $ tail $ dropWhile (/= ':') a)
+
+makeMachine :: VM.IOVector Byte -> V.Vector Byte
+            -> Maybe ConfigSocket -> Maybe ConfigSocket
+            -> Maybe ConfigSocket -> Maybe ConfigSocket
+            -> Maybe ConfigSocket -> Maybe ConfigSocket
+            -> Maybe ConfigSocket -> Maybe ConfigSocket
+            -> IO Machine
+makeMachine ramData romData s0 s1 s2 s3 s4 s5 s6 s7 = do
     pc <- newIORef pcval
     sr <- newIORef 0x2700
     drs <- newIORef (fromIntegral 0, fromIntegral 0, fromIntegral 0,
@@ -406,6 +429,14 @@ makeMachine ramData romData = do
     usp <- newIORef 0
     ssp <- newIORef sspval
     return $ Machine pc sr drs ars usp ssp ramData romData
+                   $ maybe Nothing (Just . makeSocket) s0
+                   $ maybe Nothing (Just . makeSocket) s1
+                   $ maybe Nothing (Just . makeSocket) s2
+                   $ maybe Nothing (Just . makeSocket) s3
+                   $ maybe Nothing (Just . makeSocket) s4
+                   $ maybe Nothing (Just . makeSocket) s5
+                   $ maybe Nothing (Just . makeSocket) s6
+                   $ maybe Nothing (Just . makeSocket) s7
     where pcval = (fromIntegral $ romData V.! 4) * 256 * 256 * 256 +
                   (fromIntegral $ romData V.! 5) * 256 * 256 +
                   (fromIntegral $ romData V.! 6) * 256 +
@@ -419,8 +450,9 @@ runEmulator :: Emulator a -> Machine -> IO a
 runEmulator (Emulator reader) m = runReaderT reader m
 
 suem :: Config -> IO ()
-suem (Config _ ramSize romPath _ _ _ _ _ _ _ _) = do
+suem (Config _ ramSize romPath s0 s1 s2 s3 s4 s5 s6 s7) = do
     romData <- B.readFile romPath
     ram <- VM.replicate ramSize 0
     m <- makeMachine ram (V.fromList $ B.unpack $ romData)
+                     s0 s1 s2 s3 s4 s5 s6 s7
     runEmulator runMachine m

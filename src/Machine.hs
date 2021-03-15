@@ -13,6 +13,7 @@ import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Reader (MonadReader, ReaderT, ask)
 import Control.Monad.Trans (MonadIO)
 import Utils
+import Network
 
 
 -------------------------------------------------------------------------------
@@ -30,7 +31,15 @@ data Machine = Machine {
     usp :: IORef Long,   -- this is a7 in user mode
     ssp :: IORef Long,   -- this is a7 in supermode
     ram :: VM.IOVector Byte,
-    rom :: V.Vector Byte
+    rom :: V.Vector Byte,
+    s0  :: Maybe Socket,
+    s1  :: Maybe Socket,
+    s2  :: Maybe Socket,
+    s3  :: Maybe Socket,
+    s4  :: Maybe Socket,
+    s5  :: Maybe Socket,
+    s6  :: Maybe Socket,
+    s7  :: Maybe Socket
 }
 
 -- Emulator is a monad which contains Machine and allows easy change of it.
