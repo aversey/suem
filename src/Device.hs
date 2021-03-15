@@ -1,14 +1,16 @@
-module Machine where
+module Device where
 
+import Prelude hiding (Word)
 import Data.Word (Word32, Word16, Word8)
+import Machine
 
 
 data DeviceRequest = DeviceGetByte Long
                    | DeviceGetWord Long
                    | DeviceGetLong Long
-                   | DeviceSetByte Long Word8
-                   | DeviceSetWord Long Word16
-                   | DeviceSetLong Long Word32
+                   | DeviceSetByte Long Byte
+                   | DeviceSetWord Long Word
+                   | DeviceSetLong Long Long
 
 checkInteruptsFromDevices :: Emulator ()
-checkInteruptsFromDevices = putStrLn "blah-blah"
+checkInteruptsFromDevices = return ()

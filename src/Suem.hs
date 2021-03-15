@@ -11,7 +11,7 @@ import Data.IORef
 import Data.Foldable
 import Control.Monad.Reader (runReaderT)
 import Data.IP
-import Network
+import Network.Socket
 import Machine
 import Commands
 import Utils
@@ -398,18 +398,21 @@ data Config = Config Int      -- frequence
                      (Maybe ConfigSocket)
 
 ipString :: String -> Word32
-ipString = sum . map (\(n,o) -> toInteger o * 256 ^ n) . zip [0..]
-         . reverse . fromIPv4 . read
+ipString = fromIntegral . sum . map (\(n,o) -> toInteger o * 256 ^ n)
+         . zip [0..] . reverse . fromIPv4 . read
 
-makeSocket :: ConfigSocket -> Socket
-makeSocket (ConfigUnix a) =
+makeSocket :: Maybe ConfigSocket -> IO (Maybe Socket)
+makeSocket (Just (ConfigUnix a)) = do
     sock <- socket AF_UNIX Stream defaultProtocol
     Network.Socket.bind sock $ SockAddrUnix a
-makeSocket (ConfigInet a) =
+    return $ Just sock
+makeSocket (Just (ConfigInet a)) = do
     sock <- socket AF_INET Stream defaultProtocol
     Network.Socket.bind sock $ SockAddrInet
-                                (ipString    $ takeWhile (/= ':') a)
                                 (read $ tail $ dropWhile (/= ':') a)
+                                (ipString    $ takeWhile (/= ':') a)
+    return $ Just sock
+makeSocket Nothing = return Nothing
 
 makeMachine :: VM.IOVector Byte -> V.Vector Byte
             -> Maybe ConfigSocket -> Maybe ConfigSocket
@@ -428,15 +431,16 @@ makeMachine ramData romData s0 s1 s2 s3 s4 s5 s6 s7 = do
                      fromIntegral 0)
     usp <- newIORef 0
     ssp <- newIORef sspval
+    ms0 <- makeSocket s0
+    ms1 <- makeSocket s1
+    ms2 <- makeSocket s2
+    ms3 <- makeSocket s3
+    ms4 <- makeSocket s4
+    ms5 <- makeSocket s5
+    ms6 <- makeSocket s6
+    ms7 <- makeSocket s7
     return $ Machine pc sr drs ars usp ssp ramData romData
-                   $ maybe Nothing (Just . makeSocket) s0
-                   $ maybe Nothing (Just . makeSocket) s1
-                   $ maybe Nothing (Just . makeSocket) s2
-                   $ maybe Nothing (Just . makeSocket) s3
-                   $ maybe Nothing (Just . makeSocket) s4
-                   $ maybe Nothing (Just . makeSocket) s5
-                   $ maybe Nothing (Just . makeSocket) s6
-                   $ maybe Nothing (Just . makeSocket) s7
+                     ms0 ms1 ms2 ms3 ms4 ms5 ms6 ms7
     where pcval = (fromIntegral $ romData V.! 4) * 256 * 256 * 256 +
                   (fromIntegral $ romData V.! 5) * 256 * 256 +
                   (fromIntegral $ romData V.! 6) * 256 +

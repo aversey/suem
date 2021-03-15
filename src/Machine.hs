@@ -12,8 +12,8 @@ import Control.Monad
 import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Reader (MonadReader, ReaderT, ask)
 import Control.Monad.Trans (MonadIO)
+import Network.Socket
 import Utils
-import Network
 
 
 -------------------------------------------------------------------------------
