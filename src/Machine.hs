@@ -110,6 +110,61 @@ readA 7 = isSupervisor >>= \sup -> if sup
 readA _ = return $ error "Incorrect Address register read"
 
 
+writeD :: Int -> Long -> Emulator ()
+writeD 0 r = with drs $ \rs -> do
+    (_,r1,r2,r3,r4,r5,r6,r7) <- readIORef rs
+    writeIORef rs (r,r1,r2,r3,r4,r5,r6,r7)
+writeD 1 r = with drs $ \rs -> do
+    (r0,_,r2,r3,r4,r5,r6,r7) <- readIORef rs
+    writeIORef rs (r0,r,r2,r3,r4,r5,r6,r7)
+writeD 2 r = with drs $ \rs -> do
+    (r0,r1,_,r3,r4,r5,r6,r7) <- readIORef rs
+    writeIORef rs (r0,r1,r,r3,r4,r5,r6,r7)
+writeD 3 r = with drs $ \rs -> do
+    (r0,r1,r2,_,r4,r5,r6,r7) <- readIORef rs
+    writeIORef rs (r0,r1,r2,r,r4,r5,r6,r7)
+writeD 4 r = with drs $ \rs -> do
+    (r0,r1,r2,r3,_,r5,r6,r7) <- readIORef rs
+    writeIORef rs (r0,r1,r2,r3,r,r5,r6,r7)
+writeD 5 r = with drs $ \rs -> do
+    (r0,r1,r2,r3,r4,_,r6,r7) <- readIORef rs
+    writeIORef rs (r0,r0,r2,r3,r4,r,r6,r7)
+writeD 6 r = with drs $ \rs -> do
+    (r0,r1,r2,r3,r4,r5,_,r7) <- readIORef rs
+    writeIORef rs (r0,r1,r2,r3,r4,r5,r,r7)
+writeD 7 r = with drs $ \rs -> do
+    (r0,r1,r2,r3,r4,r5,r6,_) <- readIORef rs
+    writeIORef rs (r0,r1,r2,r3,r4,r5,r6,r)
+writeD _ _ = return $ error "Incorrect Data register write"
+
+writeA :: Int -> Long -> Emulator ()
+writeA 0 r = with ars $ \rs -> do
+    (_,r1,r2,r3,r4,r5,r6) <- readIORef rs
+    writeIORef rs (r,r1,r2,r3,r4,r5,r6)
+writeA 1 r = with ars $ \rs -> do
+    (r0,_,r2,r3,r4,r5,r6) <- readIORef rs
+    writeIORef rs (r0,r,r2,r3,r4,r5,r6)
+writeA 2 r = with ars $ \rs -> do
+    (r0,r1,_,r3,r4,r5,r6) <- readIORef rs
+    writeIORef rs (r0,r1,r,r3,r4,r5,r6)
+writeA 3 r = with ars $ \rs -> do
+    (r0,r1,r2,_,r4,r5,r6) <- readIORef rs
+    writeIORef rs (r0,r1,r2,r,r4,r5,r6)
+writeA 4 r = with ars $ \rs -> do
+    (r0,r1,r2,r3,_,r5,r6) <- readIORef rs
+    writeIORef rs (r0,r1,r2,r3,r,r5,r6)
+writeA 5 r = with ars $ \rs -> do
+    (r0,r1,r2,r3,r4,_,r6) <- readIORef rs
+    writeIORef rs (r0,r0,r2,r3,r4,r,r6)
+writeA 6 r = with ars $ \rs -> do
+    (r0,r1,r2,r3,r4,r5,_) <- readIORef rs
+    writeIORef rs (r0,r1,r2,r3,r4,r5,r)
+writeA 7 r = isSupervisor >>= \sup -> if sup
+    then with ssp $ \sp -> writeIORef sp r
+    else with usp $ \sp -> writeIORef sp r
+writeA _ _ = return $ error "Incorrect Address register write"
+
+
 -------------------------------------------------------------------------------
 -- Status Register Access
 
