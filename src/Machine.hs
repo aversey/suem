@@ -209,6 +209,44 @@ isCarry = with sr $ \sr -> do
     return $ testBit sr 15
 
 
+setTracing :: Bool -> Emulator ()
+setTracing b = with sr $ \sr -> do
+    srval <- readIORef sr
+    writeIORef sr $ (if b then setBit else clearBit) srval 0
+
+setSupervisor :: Bool -> Emulator ()
+setSupervisor = with sr $ \sr -> do
+    srval <- readIORef sr
+    writeIORef sr $ (if b then setBit else clearBit) srval 2
+
+-- setInterruptLevel :: Int -> Emulator ()
+
+setExtend :: Bool -> Emulator ()
+setExtend = with sr $ \sr -> do
+    srval <- readIORef sr
+    writeIORef sr $ (if b then setBit else clearBit) srval 11
+
+setNegative :: Bool -> Emulator ()
+setNegative = with sr $ \sr -> do
+    srval <- readIORef sr
+    writeIORef sr $ (if b then setBit else clearBit) srval 12
+
+setZero :: Bool -> Emulator ()
+setZero = with sr $ \sr -> do
+    srval <- readIORef sr
+    writeIORef sr $ (if b then setBit else clearBit) srval 13
+
+setOverflow :: Bool -> Emulator ()
+setOverflow = with sr $ \sr -> do
+    srval <- readIORef sr
+    writeIORef sr $ (if b then setBit else clearBit) srval 14
+
+setCarry :: Bool -> Emulator ()
+setCarry = with sr $ \sr -> do
+    srval <- readIORef sr
+    writeIORef sr $ (if b then setBit else clearBit) srval 15
+
+
 -------------------------------------------------------------------------------
 -- Memmory Access
 
