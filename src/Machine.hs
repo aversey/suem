@@ -6,7 +6,7 @@ import qualified Data.Vector.Unboxed as V
 import qualified Data.Vector.Unboxed.Mutable as VM
 import Prelude hiding (Word)
 import Data.Word (Word32, Word16, Word8)
-import Data.Bits (testBit)
+import Data.Bits (testBit, setBit, clearBit)
 import Data.IORef
 import Control.Monad
 import Control.Monad.IO.Class (liftIO)
