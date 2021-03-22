@@ -110,7 +110,12 @@ doTRAP :: Int -> Emulator ()
 doTRAP _ = return ()
 
 doLINK :: Int -> Emulator ()
-doLINK _ = return ()
+doLINK a = do
+    incPC
+    addr <- readA a
+    sp <- readA 7
+    writeA 7 (sp-4)
+    setLong (sp-4) addr
 
 doUNLK :: Int -> Emulator ()
 doUNLK a = do

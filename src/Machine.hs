@@ -167,6 +167,7 @@ writeA _ _ = return $ error "Incorrect Address register write"
 
 -------------------------------------------------------------------------------
 -- PC Register Access
+
 readPC = with pc $ \pc -> do
     return pc
 
