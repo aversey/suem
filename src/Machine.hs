@@ -215,34 +215,34 @@ setTracing b = with sr $ \sr -> do
     writeIORef sr $ (if b then setBit else clearBit) srval 0
 
 setSupervisor :: Bool -> Emulator ()
-setSupervisor = with sr $ \sr -> do
+setSupervisor b = with sr $ \sr -> do
     srval <- readIORef sr
     writeIORef sr $ (if b then setBit else clearBit) srval 2
 
 -- setInterruptLevel :: Int -> Emulator ()
 
 setExtend :: Bool -> Emulator ()
-setExtend = with sr $ \sr -> do
+setExtend b = with sr $ \sr -> do
     srval <- readIORef sr
     writeIORef sr $ (if b then setBit else clearBit) srval 11
 
 setNegative :: Bool -> Emulator ()
-setNegative = with sr $ \sr -> do
+setNegative b = with sr $ \sr -> do
     srval <- readIORef sr
     writeIORef sr $ (if b then setBit else clearBit) srval 12
 
 setZero :: Bool -> Emulator ()
-setZero = with sr $ \sr -> do
+setZero b = with sr $ \sr -> do
     srval <- readIORef sr
     writeIORef sr $ (if b then setBit else clearBit) srval 13
 
 setOverflow :: Bool -> Emulator ()
-setOverflow = with sr $ \sr -> do
+setOverflow b = with sr $ \sr -> do
     srval <- readIORef sr
     writeIORef sr $ (if b then setBit else clearBit) srval 14
 
 setCarry :: Bool -> Emulator ()
-setCarry = with sr $ \sr -> do
+setCarry b = with sr $ \sr -> do
     srval <- readIORef sr
     writeIORef sr $ (if b then setBit else clearBit) srval 15
 
