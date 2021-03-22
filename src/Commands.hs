@@ -119,11 +119,8 @@ doUNLK a = do
     with pc $ \pc -> do
         pcval <- readIORef pc
         writeIORef pc (pcval + 2)
-    isSupervisor >>= \sup -> if sup
-    then with ssp $ \sp -> do
-        writeIORef sp (val + 4)
-    else with usp $ \sp -> do
-        writeIORef sp (val + 4)
+    writeA a val
+    writeA 7 (addr + 4)
 
 doMOVEUSP :: Int -> Int -> Emulator ()
 doMOVEUSP _ _ = return ()
