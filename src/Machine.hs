@@ -166,6 +166,19 @@ writeA _ _ = return $ error "Incorrect Address register write"
 
 
 -------------------------------------------------------------------------------
+-- PC Register Access
+readPC = with pc $ \pc -> do
+    return pc
+
+writePC r = with pc $ \pc -> do
+    writeIORef pc r
+
+incPC = with pc $ \pc -> do
+    pcval <- readIORef pc
+    writeIORef pc (pcval + 2)
+
+
+-------------------------------------------------------------------------------
 -- Status Register Access
 
 isTracing :: Emulator Bool

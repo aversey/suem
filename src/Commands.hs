@@ -114,11 +114,9 @@ doLINK _ = return ()
 
 doUNLK :: Int -> Emulator ()
 doUNLK a = do
+    incPC
     addr <- readA a
     val <- getLong addr
-    with pc $ \pc -> do
-        pcval <- readIORef pc
-        writeIORef pc (pcval + 2)
     writeA a val
     writeA 7 (addr + 4)
 
