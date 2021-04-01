@@ -12,6 +12,7 @@ import Data.Foldable
 import Control.Monad.Reader (runReaderT)
 import Data.IP
 import Network.Socket
+import Numeric
 import Machine
 import Commands
 import Utils
@@ -370,7 +371,44 @@ doCommand cmd
                (extractBits cmd [8..9])
                (extractBits cmd [10])
                (extractBits cmd [13..15])
-    | otherwise = error "Bad command."
+    | otherwise = do
+                pc <- readPC
+                sr <- readSR
+                d0 <- readD 0
+                d1 <- readD 1
+                d2 <- readD 2
+                d3 <- readD 3
+                d4 <- readD 4
+                d5 <- readD 5
+                d6 <- readD 6
+                d7 <- readD 7
+                a0 <- readA 0
+                a1 <- readA 1
+                a2 <- readA 2
+                a3 <- readA 3
+                a4 <- readA 4
+                a5 <- readA 5
+                a6 <- readA 6
+                a7 <- readA 7
+                error ("Error:\n"
+                    ++ "PC:0x" ++ showHex pc "\n"
+                    ++ "SR:0x" ++ showHex sr "\n\n"
+                    ++ "D0:0x" ++ showHex d0 "\n"
+                    ++ "D1:0x" ++ showHex d1 "\n"
+                    ++ "D2:0x" ++ showHex d2 "\n"
+                    ++ "D3:0x" ++ showHex d3 "\n"
+                    ++ "D4:0x" ++ showHex d4 "\n"
+                    ++ "D5:0x" ++ showHex d5 "\n"
+                    ++ "D6:0x" ++ showHex d6 "\n"
+                    ++ "D7:0x" ++ showHex d7 "\n\n"
+                    ++ "A0:0x" ++ showHex a0 "\n"
+                    ++ "A1:0x" ++ showHex a1 "\n"
+                    ++ "A2:0x" ++ showHex a2 "\n"
+                    ++ "A3:0x" ++ showHex a3 "\n"
+                    ++ "A4:0x" ++ showHex a4 "\n"
+                    ++ "A5:0x" ++ showHex a5 "\n"
+                    ++ "A6:0x" ++ showHex a6 "\n"
+                    ++ "A7:0x" ++ showHex a7 "")
 
 runMachine :: Emulator ()
 runMachine = forM_ [0..] $ \_ -> do
