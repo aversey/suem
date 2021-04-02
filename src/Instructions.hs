@@ -8,106 +8,106 @@ import Data.IORef
 
 
 doORICCR :: Emulator ()
-doORICCR = return ()
+doORICCR = error "ORICCR"
 
 doORISR :: Emulator ()
-doORISR = return ()
+doORISR = error "ORISR"
 
 doORI :: Int -> Int -> Int -> Emulator ()
-doORI _ _ _ = return ()
+doORI _ _ _ = error "ORI"
 
 doANDICCR :: Emulator ()
-doANDICCR = return ()
+doANDICCR = error "ANDICCR"
 
 doANDISR :: Emulator ()
-doANDISR = return ()
+doANDISR = error "ANDISR"
 
 doANDI :: Int -> Int -> Int -> Emulator ()
-doANDI _ _ _ = return ()
+doANDI _ _ _ = error "ANDI"
 
 doSUBI :: Int -> Int -> Int -> Emulator ()
-doSUBI _ _ _ = return ()
+doSUBI _ _ _ = error "SUBI"
 
 doADDI :: Int -> Int -> Int -> Emulator ()
-doADDI _ _ _ = return ()
+doADDI _ _ _ = error "ADDI"
 
 doEORICCR :: Emulator ()
-doEORICCR = return ()
+doEORICCR = error "EORICCR"
 
 doEORISR :: Emulator ()
-doEORISR = return ()
+doEORISR = error "EORISR"
 
 doEORI :: Int -> Int -> Int -> Emulator ()
-doEORI _ _ _ = return ()
+doEORI _ _ _ = error "EORI"
 
 doCMPI :: Int -> Int -> Int -> Emulator ()
-doCMPI _ _ _ = return ()
+doCMPI _ _ _ = error "CMPI"
 
 doMOVEP :: Int -> Int -> Int -> Int -> Emulator ()
-doMOVEP _ _ _ _ = return ()
+doMOVEP _ _ _ _ = error "MOVEP"
 
 doBTST :: Int -> Int -> Int -> Int -> Emulator ()
-doBTST _ _ _ _ = return ()
+doBTST _ _ _ _ = error "BTST"
 
 doBCHG :: Int -> Int -> Int -> Int -> Emulator ()
-doBCHG _ _ _ _ = return ()
+doBCHG _ _ _ _ = error "BCHG"
 
 doBCLR :: Int -> Int -> Int -> Int -> Emulator ()
-doBCLR _ _ _ _ = return ()
+doBCLR _ _ _ _ = error "BCLR"
 
 doBSET :: Int -> Int -> Int -> Int -> Emulator ()
-doBSET _ _ _ _ = return ()
+doBSET _ _ _ _ = error "BSET"
 
 doMOVEA :: Int -> Int -> Int -> Int -> Emulator ()
-doMOVEA _ _ _ _ = return ()
+doMOVEA _ _ _ _ = error "MOVEA"
 
 doMOVE :: Int -> Int -> Int -> Int -> Int -> Emulator ()
-doMOVE _ _ _ _ _ = return ()
+doMOVE _ _ _ _ _ = error "MOVE"
 
 doSRMOVE :: Int -> Int -> Emulator ()
-doSRMOVE _ _ = return ()
+doSRMOVE _ _ = error "SRMOVE"
 
 doMOVECCR :: Int -> Int -> Emulator ()
-doMOVECCR _ _ = return ()
+doMOVECCR _ _ = error "MOVECCR"
 
 doMOVESR :: Int -> Int -> Emulator ()
-doMOVESR _ _ = return ()
+doMOVESR _ _ = error "MOVESR"
 
 doNEGX :: Int -> Int -> Int -> Emulator ()
-doNEGX _ _ _ = return ()
+doNEGX _ _ _ = error "NEGX"
 
 doCLR :: Int -> Int -> Int -> Emulator ()
-doCLR _ _ _ = return ()
+doCLR _ _ _ = error "CLR"
 
 doNEG :: Int -> Int -> Int -> Emulator ()
-doNEG _ _ _ = return ()
+doNEG _ _ _ = error "NEG"
 
 doNOT :: Int -> Int -> Int -> Emulator ()
-doNOT _ _ _ = return ()
+doNOT _ _ _ = error "NOT"
 
 doEXT :: Int -> Int -> Emulator ()
-doEXT _ _ = return ()
+doEXT _ _ = error "EXT"
 
 doNBCD :: Int -> Int -> Emulator ()
-doNBCD _ _ = return ()
+doNBCD _ _ = error "NBCD"
 
 doSWAP :: Int -> Emulator ()
-doSWAP _ = return ()
+doSWAP _ = error "SWAP"
 
 doPEA :: Int -> Int -> Emulator ()
-doPEA _ _ = return ()
+doPEA _ _ = error "PEA"
 
 doILLEGAL :: Emulator ()
-doILLEGAL = return ()
+doILLEGAL = error "ILLEGAL"
 
 doTAS :: Int -> Int -> Emulator ()
-doTAS _ _ = return ()
+doTAS _ _ = error "TAS"
 
 doTST :: Int -> Int -> Int -> Emulator ()
-doTST _ _ _ = return ()
+doTST _ _ _ = error "TST"
 
 doTRAP :: Int -> Emulator ()
-doTRAP _ = return ()
+doTRAP _ = error "TRAP"
 
 doLINK :: Int -> Emulator ()
 doLINK a = do
@@ -126,10 +126,10 @@ doUNLK a = do
     writeA 7 4 (addr + 4)
 
 doMOVEUSP :: Int -> Int -> Emulator ()
-doMOVEUSP _ _ = return ()
+doMOVEUSP _ _ = error "MOVEUSP"
 
 doRESET :: Emulator ()
-doRESET = return ()
+doRESET = error "RESET"
 
 doNOP :: Emulator ()
 doNOP = with pc $ \pc -> do
@@ -137,136 +137,136 @@ doNOP = with pc $ \pc -> do
     writeIORef pc (pcval + 2)
 
 doSTOP :: Emulator ()
-doSTOP = return ()
+doSTOP = error "STOP"
 
 doRTE :: Emulator ()
-doRTE = return ()
+doRTE = error "RTE"
 
 doRTS :: Emulator ()
-doRTS = return ()
+doRTS = error "RTS"
 
 doTRAPV :: Emulator ()
-doTRAPV = return ()
+doTRAPV = error "TRAPV"
 
 doRTR :: Emulator ()
-doRTR = return ()
+doRTR = error "RTR"
 
 doJSR :: Int -> Int -> Emulator ()
-doJSR _ _ = return ()
+doJSR _ _ = error "JSR"
 
 doJMP :: Int -> Int -> Emulator ()
-doJMP _ _ = return ()
+doJMP _ _ = error "JMP"
 
 doMOVEM :: Int -> Int -> Int -> Int -> Emulator ()
-doMOVEM _ _ _ _ = return ()
+doMOVEM _ _ _ _ = error "MOVEM"
 
 doLEA :: Int -> Int -> Int -> Emulator ()
-doLEA _ _ _ = return ()
+doLEA _ _ _ = error "LEA"
 
 doCHK :: Int -> Int -> Int -> Emulator ()
-doCHK _ _ _ = return ()
+doCHK _ _ _ = error "CHK"
 
 doDBcc :: Int -> Int -> Emulator ()
-doDBcc _ _ = return ()
+doDBcc _ _ = error "DBcc"
 
 doScc :: Int -> Int -> Int -> Emulator ()
-doScc _ _ _ = return ()
+doScc _ _ _ = error "Scc"
 
 doADDQ :: Int -> Int -> Int -> Int -> Emulator ()
-doADDQ _ _ _ _ = return ()
+doADDQ _ _ _ _ = error "ADDQ"
 
 doSUBQ :: Int -> Int -> Int -> Int -> Emulator ()
-doSUBQ _ _ _ _ = return ()
+doSUBQ _ _ _ _ = error "SUBQ"
 
 doBRA :: Int -> Emulator ()
-doBRA _ = return ()
+doBRA _ = error "BRA"
 
 doBSR :: Int -> Emulator ()
-doBSR _ = return ()
+doBSR _ = error "BSR"
 
 doBcc :: Int -> Int -> Emulator ()
-doBcc _ _ = return ()
+doBcc _ _ = error "Bcc"
 
 doMOVEQ :: Int -> Int -> Emulator ()
-doMOVEQ _ _ = return ()
+doMOVEQ _ _ = error "MOVEQ"
 
 doDIVU :: Int -> Int -> Int -> Emulator ()
-doDIVU _ _ _ = return ()
+doDIVU _ _ _ = error "DIVU"
 
 doDIVS :: Int -> Int -> Int -> Emulator ()
-doDIVS _ _ _ = return ()
+doDIVS _ _ _ = error "DIVS"
 
 doSBCD :: Int -> Int -> Int -> Emulator ()
-doSBCD _ _ _ = return ()
+doSBCD _ _ _ = error "SBCD"
 
 doOR :: Int -> Int -> Int -> Int -> Int -> Emulator ()
-doOR _ _ _ _ _ = return ()
+doOR _ _ _ _ _ = error "OR"
 
 doSUBA :: Int -> Int -> Int -> Int -> Emulator ()
-doSUBA _ _ _ _ = return ()
+doSUBA _ _ _ _ = error "SUBA"
 
 doSUBX :: Int -> Int -> Int -> Int -> Emulator ()
-doSUBX _ _ _ _ = return ()
+doSUBX _ _ _ _ = error "SUBX"
 
 doSUB :: Int -> Int -> Int -> Int -> Int -> Emulator ()
-doSUB _ _ _ _ _ = return ()
+doSUB _ _ _ _ _ = error "SUB"
 
 doCMPA :: Int -> Int -> Int -> Int -> Emulator ()
-doCMPA _ _ _ _ = return ()
+doCMPA _ _ _ _ = error "CMPA"
 
 doCMP :: Int -> Int -> Int -> Int -> Emulator ()
-doCMP _ _ _ _ = return ()
+doCMP _ _ _ _ = error "CMP"
 
 doCMPM :: Int -> Int -> Int -> Emulator ()
-doCMPM _ _ _ = return ()
+doCMPM _ _ _ = error "CMPM"
 
 doEOR :: Int -> Int -> Int -> Int -> Emulator ()
-doEOR _ _ _ _ = return ()
+doEOR _ _ _ _ = error "EOR"
 
 doMULU :: Int -> Int -> Int -> Emulator ()
-doMULU _ _ _ = return ()
+doMULU _ _ _ = error "MULU"
 
 doMULS :: Int -> Int -> Int -> Emulator ()
-doMULS _ _ _ = return ()
+doMULS _ _ _ = error "MULS"
 
 doABCD :: Int -> Int -> Int -> Emulator ()
-doABCD _ _ _ = return ()
+doABCD _ _ _ = error "ABCD"
 
 doEXG :: Int -> Int -> Int -> Int -> Emulator ()
-doEXG _ _ _ _ = return ()
+doEXG _ _ _ _ = error "EXG"
 
 doAND :: Int -> Int -> Int -> Int -> Int -> Emulator ()
-doAND _ _ _ _ _ = return ()
+doAND _ _ _ _ _ = error "AND"
 
 doADDA :: Int -> Int -> Int -> Int -> Emulator ()
-doADDA _ _ _ _ = return ()
+doADDA _ _ _ _ = error "ADDA"
 
 doADDX :: Int -> Int -> Int -> Int -> Emulator ()
-doADDX _ _ _ _ = return ()
+doADDX _ _ _ _ = error "ADDX"
 
 doADD :: Int -> Int -> Int -> Int -> Int -> Emulator ()
-doADD _ _ _ _ _ = return ()
+doADD _ _ _ _ _ = error "ADD"
 
 doASD :: Int -> Int -> Int -> Emulator ()
-doASD _ _ _ = return ()
+doASD _ _ _ = error "ASD"
 
 doLSD :: Int -> Int -> Int -> Emulator ()
-doLSD _ _ _ = return ()
+doLSD _ _ _ = error "LSD"
 
 doROXd :: Int -> Int -> Int -> Emulator ()
-doROXd _ _ _ = return ()
+doROXd _ _ _ = error "ROXd"
 
 doROd :: Int -> Int -> Int -> Emulator ()
-doROd _ _ _ = return ()
+doROd _ _ _ = error "ROd"
 
 doADSR :: Int -> Int -> Int -> Int -> Int -> Emulator ()
-doADSR _ _ _ _ _ = return ()
+doADSR _ _ _ _ _ = error "ADSR"
 
 doLSDR :: Int -> Int -> Int -> Int -> Int -> Emulator ()
-doLSDR _ _ _ _ _ = return ()
+doLSDR _ _ _ _ _ = error "LSDR"
 
 doROXdR :: Int -> Int -> Int -> Int -> Int -> Emulator ()
-doROXdR _ _ _ _ _ = return ()
+doROXdR _ _ _ _ _ = error "ROXdR"
 
 doROdR :: Int -> Int -> Int -> Int -> Int -> Emulator ()
-doROdR _ _ _ _ _ = return ()
+doROdR _ _ _ _ _ = error "ROdR"

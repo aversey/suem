@@ -12,14 +12,14 @@ toBit :: Bool -> Int
 toBit True  = 1
 toBit False = 0
 
-toBits :: Bits a => a -> [Int] -> [Int]
-toBits x r = map (toBit . testBit x) r
+toBits :: FiniteBits a => a -> [Int]
+toBits x = reverse $ map (toBit . testBit x) [0..finiteBitSize x - 1]
 
 fromBits :: [Int] -> Int
-fromBits = foldl (\a b -> 2 * a + b) 0 . reverse
+fromBits = foldl (\a b -> 2 * a + b) 0
 
-extractBits :: Bits a => a -> [Int] -> Int
-extractBits x r = fromBits $ toBits x r
+extractBits :: FiniteBits a => a -> [Int] -> Int
+extractBits x r = fromBits $ map (\i -> toBits x !! i) r
 
 
 -------------------------------------------------------------------------------
