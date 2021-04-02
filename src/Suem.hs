@@ -374,14 +374,14 @@ doCommand cmd
     | otherwise = do
                 pc <- readPC
                 sr <- readSR
-                d0 <- readD 0
-                d1 <- readD 1
-                d2 <- readD 2
-                d3 <- readD 3
-                d4 <- readD 4
-                d5 <- readD 5
-                d6 <- readD 6
-                d7 <- readD 7
+                d0 <- readD 0 3
+                d1 <- readD 1 3
+                d2 <- readD 2 3
+                d3 <- readD 3 3
+                d4 <- readD 4 3
+                d5 <- readD 5 3
+                d6 <- readD 6 3
+                d7 <- readD 7 3
                 a0 <- readA 0
                 a1 <- readA 1
                 a2 <- readA 2

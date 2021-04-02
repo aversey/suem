@@ -55,32 +55,32 @@ with field f = do
 -------------------------------------------------------------------------------
 -- Data and Address Registers Access
 
-readD :: Int -> Emulator Long
-readD 0 = with drs $ \rs -> do
+readD :: Int -> Int -> Emulator Long
+readD 0 s = with drs $ \rs -> do
     (r,_,_,_,_,_,_,_) <- readIORef rs
-    return r
-readD 1 = with drs $ \rs -> do
+    return $ convertLong r s
+readD 1 s = with drs $ \rs -> do
     (_,r,_,_,_,_,_,_) <- readIORef rs
     return r
-readD 2 = with drs $ \rs -> do
+readD 2 s = with drs $ \rs -> do
     (_,_,r,_,_,_,_,_) <- readIORef rs
-    return r
-readD 3 = with drs $ \rs -> do
+    return $ convertLong r s
+readD 3 s = with drs $ \rs -> do
     (_,_,_,r,_,_,_,_) <- readIORef rs
-    return r
-readD 4 = with drs $ \rs -> do
+    return $ convertLong r s
+readD 4 s = with drs $ \rs -> do
     (_,_,_,_,r,_,_,_) <- readIORef rs
-    return r
-readD 5 = with drs $ \rs -> do
+    return $ convertLong r s
+readD 5 s = with drs $ \rs -> do
     (_,_,_,_,_,r,_,_) <- readIORef rs
-    return r
-readD 6 = with drs $ \rs -> do
+    return $ convertLong r s
+readD 6 s = with drs $ \rs -> do
     (_,_,_,_,_,_,r,_) <- readIORef rs
-    return r
-readD 7 = with drs $ \rs -> do
+    return $ convertLong r s
+readD 7 s = with drs $ \rs -> do
     (_,_,_,_,_,_,_,r) <- readIORef rs
-    return r
-readD _ = return $ error "Incorrect Data register read"
+    return $ convertLong r s
+readD _ _ = return $ error "Incorrect Data register read"
 
 readA :: Int -> Emulator Long
 readA 0 = with ars $ \rs -> do
@@ -110,32 +110,32 @@ readA 7 = isSupervisor >>= \sup -> if sup
 readA _ = return $ error "Incorrect Address register read"
 
 
-writeD :: Int -> Long -> Emulator ()
-writeD 0 r = with drs $ \rs -> do
-    (_,r1,r2,r3,r4,r5,r6,r7) <- readIORef rs
-    writeIORef rs (r,r1,r2,r3,r4,r5,r6,r7)
-writeD 1 r = with drs $ \rs -> do
-    (r0,_,r2,r3,r4,r5,r6,r7) <- readIORef rs
-    writeIORef rs (r0,r,r2,r3,r4,r5,r6,r7)
-writeD 2 r = with drs $ \rs -> do
-    (r0,r1,_,r3,r4,r5,r6,r7) <- readIORef rs
-    writeIORef rs (r0,r1,r,r3,r4,r5,r6,r7)
-writeD 3 r = with drs $ \rs -> do
-    (r0,r1,r2,_,r4,r5,r6,r7) <- readIORef rs
-    writeIORef rs (r0,r1,r2,r,r4,r5,r6,r7)
-writeD 4 r = with drs $ \rs -> do
-    (r0,r1,r2,r3,_,r5,r6,r7) <- readIORef rs
-    writeIORef rs (r0,r1,r2,r3,r,r5,r6,r7)
-writeD 5 r = with drs $ \rs -> do
-    (r0,r1,r2,r3,r4,_,r6,r7) <- readIORef rs
-    writeIORef rs (r0,r0,r2,r3,r4,r,r6,r7)
-writeD 6 r = with drs $ \rs -> do
-    (r0,r1,r2,r3,r4,r5,_,r7) <- readIORef rs
-    writeIORef rs (r0,r1,r2,r3,r4,r5,r,r7)
-writeD 7 r = with drs $ \rs -> do
-    (r0,r1,r2,r3,r4,r5,r6,_) <- readIORef rs
-    writeIORef rs (r0,r1,r2,r3,r4,r5,r6,r)
-writeD _ _ = return $ error "Incorrect Data register write"
+writeD :: Int -> Int -> Long -> Emulator ()
+writeD 0 s r = with drs $ \rs -> do
+    (r0,r1,r2,r3,r4,r5,r6,r7) <- readIORef rs
+    writeIORef rs (combineLong r r0 s,r1,r2,r3,r4,r5,r6,r7)
+writeD 1 s r = with drs $ \rs -> do
+    (r0,r1,r2,r3,r4,r5,r6,r7) <- readIORef rs
+    writeIORef rs (r0,combineLong r r1 s,r2,r3,r4,r5,r6,r7)
+writeD 2 s r = with drs $ \rs -> do
+    (r0,r1,r2,r3,r4,r5,r6,r7) <- readIORef rs
+    writeIORef rs (r0,r1,combineLong r r2 s,r3,r4,r5,r6,r7)
+writeD 3 s r = with drs $ \rs -> do
+    (r0,r1,r2,r3,r4,r5,r6,r7) <- readIORef rs
+    writeIORef rs (r0,r1,r2,combineLong r r3 s,r4,r5,r6,r7)
+writeD 4 s r = with drs $ \rs -> do
+    (r0,r1,r2,r3,r4,r5,r6,r7) <- readIORef rs
+    writeIORef rs (r0,r1,r2,r3,combineLong r r4 s,r5,r6,r7)
+writeD 5 s r = with drs $ \rs -> do
+    (r0,r1,r2,r3,r4,r5,r6,r7) <- readIORef rs
+    writeIORef rs (r0,r0,r2,r3,r4,combineLong r r5 s,r6,r7)
+writeD 6 s r = with drs $ \rs -> do
+    (r0,r1,r2,r3,r4,r5,r6,r7) <- readIORef rs
+    writeIORef rs (r0,r1,r2,r3,r4,r5,combineLong r r6 s,r7)
+writeD 7 s r = with drs $ \rs -> do
+    (r0,r1,r2,r3,r4,r5,r6,r7) <- readIORef rs
+    writeIORef rs (r0,r1,r2,r3,r4,r5,r6,combineLong r r7 s)
+writeD _ _ _ = return $ error "Incorrect Data register write"
 
 writeA :: Int -> Long -> Emulator ()
 writeA 0 r = with ars $ \rs -> do
@@ -312,3 +312,11 @@ setLong :: Long -> Long -> Emulator ()
 setLong a l = do
     setWord a       (fromIntegral (rem (fromIntegral l) 256 * 256))
     setWord (a + 2) (fromIntegral (div (fromIntegral l) 256 * 256))
+
+
+-------------------------------------------------------------------------------
+-- Operand Access
+
+getOp :: Int -> Int -> Int
+      -> (Emulator Long, Long -> Emulator ())
+getOp 0 dr s = (readD dr s, writeD dr s)
