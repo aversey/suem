@@ -417,3 +417,16 @@ getOp 7 4 s = do
     skipOp s
     let naddr = addr + if s == 1 then 1 else 0
     return (getMemory naddr s, setMemory naddr s)
+
+-------------------------------------------------------------------------------
+-- Size converter
+
+getSize :: Int -> Int
+getSize 0 = 1
+getSize 1 = 2
+getSize 2 = 4
+
+getMoveSize :: Int -> Int
+getMoveSize 1 = 1
+getMoveSize 3 = 2
+getMoveSize 2 = 4

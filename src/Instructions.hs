@@ -62,10 +62,10 @@ doMOVEA :: Int -> Int -> Int -> Int -> Emulator ()
 doMOVEA _ _ _ _ = error "MOVEA"
 
 doMOVE :: Int -> Int -> Int -> Int -> Int -> Emulator ()
-doMOVE 1 dst_reg dst_mode src_mode src_reg = do
+doMOVE size dst_reg dst_mode src_mode src_reg = do
     incPC
-    (src_get, src_set) <- getOp src_mode src_reg 1
-    (dst_get, dst_set) <- getOp dst_mode dst_reg 1
+    (src_get, src_set) <- getOp src_mode src_reg (getMoveSize size)
+    (dst_get, dst_set) <- getOp dst_mode dst_reg (getMoveSize size)
     src_val <- src_get
     dst_set src_val
 
@@ -120,13 +120,13 @@ doLINK a = do
     addr <- readA a 4
     sp <- readA 7 4
     writeA 7 4 (sp - 4)
-    setLong (sp - 4) addr
+    setMemory (sp - 4) 4 addr
 
 doUNLK :: Int -> Emulator ()
 doUNLK a = do
     incPC
     addr <- readA a 4
-    val <- getLong addr
+    val <- getMemory addr 4
     writeA a 4 val
     writeA 7 4 (addr + 4)
 
@@ -183,7 +183,15 @@ doSUBQ :: Int -> Int -> Int -> Int -> Emulator ()
 doSUBQ _ _ _ _ = error "SUBQ"
 
 doBRA :: Int -> Emulator ()
-doBRA _ = error "BRA"
+doBRA 0 = do
+    incPC
+    pc <- readPC
+    disp <- getMemory pc 2
+    writePC (pc + disp)
+doBRA disp = do
+    incPC
+    pc <- readPC
+    writePC (pc + (fromIntegral disp))
 
 doBSR :: Int -> Emulator ()
 doBSR _ = error "BSR"
