@@ -365,16 +365,16 @@ getOp 3 ar s = do
     return (getMemory addr s, setMemory addr s)
 getOp 4 ar s = do
     addr <- readA ar 4
-    let addr = addr - (fromIntegral s)
+    let naddr = addr - (fromIntegral s)
     writeA ar 4 addr
-    return (getMemory addr s, setMemory addr s)
+    return (getMemory naddr s, setMemory naddr s)
 getOp 5 ar s = do
     pc <- readPC
     skipOp 2
     disp <- getMemory pc 2
     addr <- readA ar 4
-    let addr = addr + disp
-    return (getMemory addr s, setMemory addr s)
+    let naddr = addr + disp
+    return (getMemory naddr s, setMemory naddr s)
 getOp 6 ar s = do
     pc <- readPC
     skipOp 2
@@ -384,14 +384,14 @@ getOp 6 ar s = do
         ((extractBits prefix [4] + 1) * 2)
     disp <- getMemory (pc + 1) 1
     addr <- readA ar 4
-    let addr = addr + index + disp
-    return (getMemory addr s, setMemory addr s)
+    let naddr = addr + index + disp
+    return (getMemory naddr s, setMemory naddr s)
 getOp 7 2 s = do
     addr <- readPC
     skipOp 2
     disp <- getMemory addr 2
-    let addr = addr + disp
-    return (getMemory addr s, setMemory addr s)
+    let naddr = addr + disp
+    return (getMemory naddr s, setMemory naddr s)
 getOp 7 3 s = do
     addr <- readPC
     skipOp 2
@@ -400,8 +400,8 @@ getOp 7 3 s = do
         (extractBits prefix [1..3])
         ((extractBits prefix [4] + 1) * 2)
     disp <- getMemory (addr + 1) 1
-    let addr = addr + index + disp
-    return (getMemory addr s, setMemory addr s)
+    let naddr = addr + index + disp
+    return (getMemory naddr s, setMemory naddr s)
 getOp 7 0 s = do
     pc <- readPC
     skipOp 2
@@ -415,5 +415,5 @@ getOp 7 1 s = do
 getOp 7 4 s = do
     addr <- readPC
     skipOp s
-    let addr = addr + if s == 1 then 1 else 0
-    return (getMemory addr s, setMemory addr s)
+    let naddr = addr + if s == 1 then 1 else 0
+    return (getMemory naddr s, setMemory naddr s)
