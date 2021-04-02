@@ -412,7 +412,7 @@ getOp 7 1 s = do
     skipOp 4
     addr <- getLong pc
     return (getMemory addr s, setMemory addr s)
-getOp 7 6 s = do
+getOp 7 4 s = do
     addr <- readPC
     skipOp s
     let addr = addr + if s == 1 then 1 else 0

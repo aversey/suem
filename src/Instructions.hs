@@ -62,7 +62,12 @@ doMOVEA :: Int -> Int -> Int -> Int -> Emulator ()
 doMOVEA _ _ _ _ = error "MOVEA"
 
 doMOVE :: Int -> Int -> Int -> Int -> Int -> Emulator ()
-doMOVE _ _ _ _ _ = error "MOVE"
+doMOVE 1 dst_reg dst_mode src_mode src_reg = do
+    incPC 
+    src <- getOp src_mode src_reg 1
+    src_value <- fst src
+    dst <- getOp dst_mode dst_reg 1
+    (snd dst) src_value
 
 doSRMOVE :: Int -> Int -> Emulator ()
 doSRMOVE _ _ = error "SRMOVE"
