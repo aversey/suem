@@ -55,13 +55,13 @@ with field f = do
 -------------------------------------------------------------------------------
 -- Data and Address Registers Access
 
-readD :: Int -> Int -> Emulator Long
+readD :: Int -> Long -> Emulator Long
 readD 0 s = with drs $ \rs -> do
     (r,_,_,_,_,_,_,_) <- readIORef rs
     return $ convertLong r s
 readD 1 s = with drs $ \rs -> do
     (_,r,_,_,_,_,_,_) <- readIORef rs
-    return r
+    return $ convertLong r s
 readD 2 s = with drs $ \rs -> do
     (_,_,r,_,_,_,_,_) <- readIORef rs
     return $ convertLong r s
@@ -82,35 +82,35 @@ readD 7 s = with drs $ \rs -> do
     return $ convertLong r s
 readD _ _ = return $ error "Incorrect Data register read"
 
-readA :: Int -> Emulator Long
-readA 0 = with ars $ \rs -> do
+readA :: Int -> Long -> Emulator Long
+readA 0 s = with ars $ \rs -> do
     (r,_,_,_,_,_,_) <- readIORef rs
-    return r
-readA 1 = with ars $ \rs -> do
+    return $ convertLong r s
+readA 1 s = with ars $ \rs -> do
     (_,r,_,_,_,_,_) <- readIORef rs
-    return r
-readA 2 = with ars $ \rs -> do
+    return $ convertLong r s
+readA 2 s = with ars $ \rs -> do
     (_,_,r,_,_,_,_) <- readIORef rs
-    return r
-readA 3 = with ars $ \rs -> do
+    return $ convertLong r s
+readA 3 s = with ars $ \rs -> do
     (_,_,_,r,_,_,_) <- readIORef rs
-    return r
-readA 4 = with ars $ \rs -> do
+    return $ convertLong r s
+readA 4 s = with ars $ \rs -> do
     (_,_,_,_,r,_,_) <- readIORef rs
-    return r
-readA 5 = with ars $ \rs -> do
+    return $ convertLong r s
+readA 5 s = with ars $ \rs -> do
     (_,_,_,_,_,r,_) <- readIORef rs
-    return r
-readA 6 = with ars $ \rs -> do
+    return $ convertLong r s
+readA 6 s = with ars $ \rs -> do
     (_,_,_,_,_,_,r) <- readIORef rs
-    return r
-readA 7 = isSupervisor >>= \sup -> if sup
+    return $ convertLong r s
+readA 7 s = isSupervisor >>= \sup -> if sup
     then with ssp $ \sp -> readIORef sp
     else with usp $ \sp -> readIORef sp
-readA _ = return $ error "Incorrect Address register read"
+readA _ _ = return $ error "Incorrect Address register read"
 
 
-writeD :: Int -> Int -> Long -> Emulator ()
+writeD :: Int -> Long -> Long -> Emulator ()
 writeD 0 s r = with drs $ \rs -> do
     (r0,r1,r2,r3,r4,r5,r6,r7) <- readIORef rs
     writeIORef rs (combineLong r r0 s,r1,r2,r3,r4,r5,r6,r7)
@@ -137,32 +137,32 @@ writeD 7 s r = with drs $ \rs -> do
     writeIORef rs (r0,r1,r2,r3,r4,r5,r6,combineLong r r7 s)
 writeD _ _ _ = return $ error "Incorrect Data register write"
 
-writeA :: Int -> Long -> Emulator ()
-writeA 0 r = with ars $ \rs -> do
-    (_,r1,r2,r3,r4,r5,r6) <- readIORef rs
-    writeIORef rs (r,r1,r2,r3,r4,r5,r6)
-writeA 1 r = with ars $ \rs -> do
-    (r0,_,r2,r3,r4,r5,r6) <- readIORef rs
-    writeIORef rs (r0,r,r2,r3,r4,r5,r6)
-writeA 2 r = with ars $ \rs -> do
-    (r0,r1,_,r3,r4,r5,r6) <- readIORef rs
-    writeIORef rs (r0,r1,r,r3,r4,r5,r6)
-writeA 3 r = with ars $ \rs -> do
-    (r0,r1,r2,_,r4,r5,r6) <- readIORef rs
-    writeIORef rs (r0,r1,r2,r,r4,r5,r6)
-writeA 4 r = with ars $ \rs -> do
-    (r0,r1,r2,r3,_,r5,r6) <- readIORef rs
-    writeIORef rs (r0,r1,r2,r3,r,r5,r6)
-writeA 5 r = with ars $ \rs -> do
-    (r0,r1,r2,r3,r4,_,r6) <- readIORef rs
-    writeIORef rs (r0,r0,r2,r3,r4,r,r6)
-writeA 6 r = with ars $ \rs -> do
-    (r0,r1,r2,r3,r4,r5,_) <- readIORef rs
-    writeIORef rs (r0,r1,r2,r3,r4,r5,r)
-writeA 7 r = isSupervisor >>= \sup -> if sup
+writeA :: Int -> Long -> Long -> Emulator ()
+writeA 0 s r = with ars $ \rs -> do
+    (r0,r1,r2,r3,r4,r5,r6) <- readIORef rs
+    writeIORef rs (combineLong r r0 s,r1,r2,r3,r4,r5,r6)
+writeA 1 s r = with ars $ \rs -> do
+    (r0,r1,r2,r3,r4,r5,r6) <- readIORef rs
+    writeIORef rs (r0,combineLong r r1 s,r2,r3,r4,r5,r6)
+writeA 2 s r = with ars $ \rs -> do
+    (r0,r1,r2,r3,r4,r5,r6) <- readIORef rs
+    writeIORef rs (r0,r1,combineLong r r2 s,r3,r4,r5,r6)
+writeA 3 s r = with ars $ \rs -> do
+    (r0,r1,r2,r3,r4,r5,r6) <- readIORef rs
+    writeIORef rs (r0,r1,r2,combineLong r r3 s,r4,r5,r6)
+writeA 4 s r = with ars $ \rs -> do
+    (r0,r1,r2,r3,r4,r5,r6) <- readIORef rs
+    writeIORef rs (r0,r1,r2,r3,combineLong r r4 s,r5,r6)
+writeA 5 s r = with ars $ \rs -> do
+    (r0,r1,r2,r3,r4,r5,r6) <- readIORef rs
+    writeIORef rs (r0,r0,r2,r3,r4,combineLong r r5 s,r6)
+writeA 6 s r = with ars $ \rs -> do
+    (r0,r1,r2,r3,r4,r5,r6) <- readIORef rs
+    writeIORef rs (r0,r1,r2,r3,r4,r5,combineLong r r6 s)
+writeA 7 s r = isSupervisor >>= \sup -> if sup
     then with ssp $ \sp -> writeIORef sp r
     else with usp $ \sp -> writeIORef sp r
-writeA _ _ = return $ error "Incorrect Address register write"
+writeA _ _ _ = return $ error "Incorrect Address register write"
 
 
 -------------------------------------------------------------------------------
@@ -317,6 +317,27 @@ setLong a l = do
 -------------------------------------------------------------------------------
 -- Operand Access
 
-getOp :: Int -> Int -> Int
-      -> (Emulator Long, Long -> Emulator ())
-getOp 0 dr s = (readD dr s, writeD dr s)
+getOp :: Int -> Int -> Long
+      -> Emulator (Emulator Long, Long -> Emulator ())
+getOp 0 dr s = return (readD dr s, writeD dr s)
+getOp 1 ar s = return (readA ar s, writeA ar s)
+getOp 2 ar _ = do
+    addr <- readA ar 4
+    return (getLong addr, setLong addr)
+getOp 3 ar 4 = do
+    addr <- readA ar 4
+    writeA ar 4 (addr + 4)
+    return (getLong addr, setLong addr)
+getOp 4 ar 4 = do
+    addr <- readA ar 4
+    writeA ar 4 (addr - 4)
+    new_addr <- readA ar 4
+    return (getLong new_addr, setLong new_addr)
+getOp 7 1 4 = do
+    pc <- readPC
+    addr <- getLong pc
+    return (getLong addr, setLong addr)
+getOp 7 6 4 = do
+    addr <- readPC
+    incPC
+    return (getLong addr, setLong addr)
