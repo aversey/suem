@@ -344,13 +344,13 @@ setMemory _ _ _ = error "Bad size of setMemory"
 -------------------------------------------------------------------------------
 -- Operand Access
 
-getIndexReg :: Int -> Int -> Int -> Emulator Long
-getIndexReg 0 dr size = do
-        r <- readD dr ((size + 1) * 2)
-        return r
-getIndexReg 1 ar size = do
-        r <- readA ar ((size + 1) * 2)
-        return r
+skipOp :: Int -> Emulator ()
+skipOp 1 = incPC
+skipOp 2 = incPC
+skipOp 4 = do
+    incPC
+    incPC
+skipOp _ = error "Bad skipOp"
 
 getOp :: Int -> Int -> Int
       -> Emulator (Emulator Long, Long -> Emulator ())
@@ -379,10 +379,9 @@ getOp 6 ar s = do
     pc <- readPC
     incPC
     prefix <- getMemory pc 1
-    index <- getIndexReg
-        (extractBits prefix [0])
+    index <- (if testBit prefix 0 then readA else readD)
         (extractBits prefix [1..3])
-        (extractBits prefix [4])
+        ((extractBits prefix [4] + 1) * 2)
     disp <- getMemory (pc + 1) 1
     addr <- readA ar 4
     let addr = addr + index + disp
@@ -397,10 +396,9 @@ getOp 7 3 s = do
     addr <- readPC
     incPC
     prefix <- getMemory addr 1
-    index <- getIndexReg
-        (extractBits prefix [0])
+    index <- (if testBit prefix 0 then readA else readD)
         (extractBits prefix [1..3])
-        (extractBits prefix [4])
+        ((extractBits prefix [4] + 1) * 2)
     disp <- getMemory (addr + 1) 1
     let addr = addr + index + disp
     return (getMemory addr s, setMemory addr s)
@@ -411,21 +409,11 @@ getOp 7 0 s = do
     return (getMemory addr s, setMemory addr s)
 getOp 7 1 s = do
     pc <- readPC
-    incPC
-    incPC
-    addr <- getMemory pc 4
+    skipOp 4
+    addr <- getLong pc
     return (getMemory addr s, setMemory addr s)
-getOp 7 6 1 = do
+getOp 7 6 s = do
     addr <- readPC
-    incPC
-    let addr = addr + 1
-    return (getMemory addr 1, setMemory addr 1)
-getOp 7 6 2 = do
-    addr <- readPC
-    incPC
-    return (getMemory addr 2, setMemory addr 2)
-getOp 7 6 4 = do
-    addr <- readPC
-    incPC
-    incPC
-    return (getMemory addr 4, setMemory addr 4)
+    skipOp s
+    let addr = addr + if s == 1 then 1 else 0
+    return (getMemory addr s, setMemory addr s)
