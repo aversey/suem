@@ -1,5 +1,5 @@
--- This module describes the semantics of machine commands.
-module Commands where
+-- This module describes the semantics of machine instructions.
+module Instructions where
 
 import Prelude hiding (Word)
 import Machine
