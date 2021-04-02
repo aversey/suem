@@ -105,8 +105,12 @@ readA 6 s = with ars $ \rs -> do
     (_,_,_,_,_,_,r) <- readIORef rs
     return $ convertLong r s
 readA 7 s = isSupervisor >>= \sup -> if sup
-    then with ssp $ \sp -> readIORef sp
-    else with usp $ \sp -> readIORef sp
+    then with ssp $ \sp -> do
+        v <- readIORef sp
+        return $ convertLong v s
+    else with usp $ \sp -> do
+        v <- readIORef sp
+        return $ convertLong v s
 readA _ _ = return $ error "Incorrect Address register read"
 
 
@@ -160,8 +164,12 @@ writeA 6 s r = with ars $ \rs -> do
     (r0,r1,r2,r3,r4,r5,r6) <- readIORef rs
     writeIORef rs (r0,r1,r2,r3,r4,r5,combineLong r r6 s)
 writeA 7 s r = isSupervisor >>= \sup -> if sup
-    then with ssp $ \sp -> writeIORef sp r
-    else with usp $ \sp -> writeIORef sp r
+    then with ssp $ \sp -> do
+        v <- readIORef sp
+        writeIORef sp $ combineLong r v s
+    else with usp $ \sp -> do
+        v <- readIORef sp
+        writeIORef sp $ combineLong r v s
 writeA _ _ _ = return $ error "Incorrect Address register write"
 
 
