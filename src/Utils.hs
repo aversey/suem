@@ -25,13 +25,13 @@ extractBits x r = fromBits $ toBits x r
 -------------------------------------------------------------------------------
 -- Size Convertion
 
-convertLong :: Word32 -> Word32 -> Word32
+convertLong :: Word32 -> Int -> Word32
 convertLong x 1 = x .&. 0x000000FF
 convertLong x 2 = x .&. 0x0000FFFF
 convertLong x 4 = x
 convertLong _ s = error $ "Wrong size (" ++ show s ++ ") of convertLong"
 
-combineLong :: Word32 -> Word32 -> Word32 -> Word32
+combineLong :: Word32 -> Word32 -> Int -> Word32
 combineLong update base 1 = base .&. 0xFFFFFF00 .|. (convertLong update 1)
 combineLong update base 2 = base .&. 0xFFFF0000 .|. (convertLong update 2)
 combineLong update _    4 = update
