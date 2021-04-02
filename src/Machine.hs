@@ -314,6 +314,25 @@ setLong a l = do
     setWord (a + 2) (fromIntegral (div (fromIntegral l) 256 * 256))
 
 
+getMemory :: Long -> Int -> Emulator Long
+getMemory a 1 = do
+    val <- getByte a
+    return $ fromIntegral val
+getMemory a 2 = do
+    val <- getWord a
+    return $ fromIntegral val
+getMemory a 4 = do
+    val <- getLong a
+    return $ fromIntegral val
+getMemory _ _ = error "Bad size of getMemory"
+
+setMemory :: Long -> Int -> Long -> Emulator ()
+setMemory a 1 v = setByte a $ fromIntegral v
+setMemory a 2 v = setWord a $ fromIntegral v
+setMemory a 4 v = setLong a $ fromIntegral v
+setMemory _ _ _ = error "Bad size of setMemory"
+
+
 -------------------------------------------------------------------------------
 -- Operand Access
 
@@ -321,23 +340,23 @@ getOp :: Int -> Int -> Int
       -> Emulator (Emulator Long, Long -> Emulator ())
 getOp 0 dr s = return (readD dr s, writeD dr s)
 getOp 1 ar s = return (readA ar s, writeA ar s)
-getOp 2 ar _ = do
+getOp 2 ar s = do
     addr <- readA ar 4
-    return (getLong addr, setLong addr)
-getOp 3 ar 4 = do
+    return (getMemory addr s, setMemory addr s)
+getOp 3 ar s = do
     addr <- readA ar 4
     writeA ar 4 (addr + 4)
-    return (getLong addr, setLong addr)
-getOp 4 ar 4 = do
+    return (getMemory addr s, setMemory addr s)
+getOp 4 ar s = do
     addr <- readA ar 4
-    writeA ar 4 (addr - 4)
-    new_addr <- readA ar 4
-    return (getLong new_addr, setLong new_addr)
-getOp 7 1 4 = do
+    let addr = addr - 4
+    writeA ar 4 addr
+    return (getMemory addr s, setMemory addr s)
+getOp 7 1 s = do
     pc <- readPC
     addr <- getLong pc
-    return (getLong addr, setLong addr)
-getOp 7 6 4 = do
+    return (getMemory addr s, setMemory addr s)
+getOp 7 6 s = do
     addr <- readPC
     incPC
-    return (getLong addr, setLong addr)
+    return (getMemory addr s, setMemory addr s)
