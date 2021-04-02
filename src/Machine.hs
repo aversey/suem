@@ -344,6 +344,14 @@ setMemory _ _ _ = error "Bad size of setMemory"
 -------------------------------------------------------------------------------
 -- Operand Access
 
+getIndexReg :: Int -> Int -> Int -> Emulator Long
+getIndexReg 0 dr size = do
+        r <- readD dr ((size + 1) * 2)
+        return r
+getIndexReg 1 ar size = do
+        r <- readA ar ((size + 1) * 2)
+        return r
+
 getOp :: Int -> Int -> Int
       -> Emulator (Emulator Long, Long -> Emulator ())
 getOp 0 dr s = return (readD dr s, writeD dr s)
@@ -353,18 +361,71 @@ getOp 2 ar s = do
     return (getMemory addr s, setMemory addr s)
 getOp 3 ar s = do
     addr <- readA ar 4
-    writeA ar 4 (addr + 4)
+    writeA ar 4 (addr + (fromIntegral s))
     return (getMemory addr s, setMemory addr s)
 getOp 4 ar s = do
     addr <- readA ar 4
-    let addr = addr - 4
+    let addr = addr - (fromIntegral s)
     writeA ar 4 addr
+    return (getMemory addr s, setMemory addr s)
+getOp 5 ar s = do
+    pc <- readPC
+    incPC
+    disp <- getMemory pc 2
+    addr <- readA ar 4
+    let addr = addr + disp
+    return (getMemory addr s, setMemory addr s)
+getOp 6 ar s = do
+    pc <- readPC
+    incPC
+    prefix <- getMemory pc 1
+    index <- getIndexReg
+        (extractBits prefix [0])
+        (extractBits prefix [1..3])
+        (extractBits prefix [4])
+    disp <- getMemory (pc + 1) 1
+    addr <- readA ar 4
+    let addr = addr + index + disp
+    return (getMemory addr s, setMemory addr s)
+getOp 7 2 s = do
+    addr <- readPC
+    incPC
+    disp <- getMemory addr 2
+    let addr = addr + disp
+    return (getMemory addr s, setMemory addr s)
+getOp 7 3 s = do
+    addr <- readPC
+    incPC
+    prefix <- getMemory addr 1
+    index <- getIndexReg
+        (extractBits prefix [0])
+        (extractBits prefix [1..3])
+        (extractBits prefix [4])
+    disp <- getMemory (addr + 1) 1
+    let addr = addr + index + disp
+    return (getMemory addr s, setMemory addr s)
+getOp 7 0 s = do
+    pc <- readPC
+    incPC
+    addr <- getMemory pc 2
     return (getMemory addr s, setMemory addr s)
 getOp 7 1 s = do
     pc <- readPC
-    addr <- getLong pc
+    incPC
+    incPC
+    addr <- getMemory pc 4
     return (getMemory addr s, setMemory addr s)
-getOp 7 6 s = do
+getOp 7 6 1 = do
     addr <- readPC
     incPC
-    return (getMemory addr s, setMemory addr s)
+    let addr = addr + 1
+    return (getMemory addr 1, setMemory addr 1)
+getOp 7 6 2 = do
+    addr <- readPC
+    incPC
+    return (getMemory addr 2, setMemory addr 2)
+getOp 7 6 4 = do
+    addr <- readPC
+    incPC
+    incPC
+    return (getMemory addr 4, setMemory addr 4)
