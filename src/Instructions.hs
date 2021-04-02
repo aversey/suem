@@ -62,7 +62,8 @@ doMOVEA :: Int -> Int -> Int -> Int -> Emulator ()
 doMOVEA _ _ _ _ = return ()
 
 doMOVE :: Int -> Int -> Int -> Int -> Int -> Emulator ()
-doMOVE _ _ _ _ _ = return ()
+doMOVE 3 dst_reg dst_mode src_mode src_reg = do
+    incPC
 
 doSRMOVE :: Int -> Int -> Emulator ()
 doSRMOVE _ _ = return ()
@@ -132,9 +133,8 @@ doRESET :: Emulator ()
 doRESET = return ()
 
 doNOP :: Emulator ()
-doNOP = with pc $ \pc -> do
-    pcval <- readIORef pc
-    writeIORef pc (pcval + 2)
+doNOP = do
+    incPC
 
 doSTOP :: Emulator ()
 doSTOP = return ()
