@@ -132,9 +132,8 @@ doRESET :: Emulator ()
 doRESET = error "RESET"
 
 doNOP :: Emulator ()
-doNOP = with pc $ \pc -> do
-    pcval <- readIORef pc
-    writeIORef pc (pcval + 2)
+doNOP = do
+    incPC
 
 doSTOP :: Emulator ()
 doSTOP = error "STOP"
