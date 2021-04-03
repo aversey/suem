@@ -201,35 +201,23 @@ doBRA disp = do
 doBSR :: Int -> Emulator ()
 doBSR _ = error "BSR"
 
+checkBccCondition :: Int -> Emulator Bool
+-- BNE
+checkBccCondition 6 = do
+    zf <- isZero
+    return $ not zf
+-- BEQ
+checkBccCondition 7 = isZero
+
 doBcc :: Int -> Int -> Emulator ()
--- NE
-doBcc 6 0 = do
+doBcc cc disp = do
     incPC
     pc <- readPC
-    zf <- isZero
-    disp <- getMemory pc 2
-    let real_disp = if not zf then disp else 2
-    writePC (pc + (fromIntegral real_disp))
-doBcc 6 disp = do
-    incPC
-    pc <- readPC
-    zf <- isZero
-    let real_disp = if not zf then disp else 0
-    writePC (pc + (fromIntegral real_disp))
--- EQ
-doBcc 7 0 = do
-    incPC
-    pc <- readPC
-    zf <- isZero
-    disp <- getMemory pc 2
-    let real_disp = if zf then disp else 2
-    writePC (pc + (fromIntegral real_disp))
-doBcc 7 disp = do
-    incPC
-    pc <- readPC
-    zf <- isZero
-    let real_disp = if zf then disp else 0
-    writePC (pc + (fromIntegral real_disp))
+    check <- checkBccCondition cc
+    the_disp <- if disp == 0
+        then if check then getMemory pc 2 else return 2
+        else if check then return $ fromIntegral disp else return 0
+    writePC $ pc + the_disp
 
 doMOVEQ :: Int -> Int -> Emulator ()
 doMOVEQ _ _ = error "MOVEQ"
