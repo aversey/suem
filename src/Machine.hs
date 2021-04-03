@@ -312,14 +312,14 @@ setByte a b | a < 0x8 = return ()
  -- TODO: only even addresses are allowed
 setWord :: Long -> Word -> Emulator ()
 setWord a w = do
-    setByte a       (fromIntegral (rem (fromIntegral w) 256))
-    setByte (a + 1) (fromIntegral (div (fromIntegral w) 256))
+    setByte a       (fromIntegral (div (fromIntegral w) 256))
+    setByte (a + 1) (fromIntegral (rem (fromIntegral w) 256))
 
  -- TODO: only even addresses are allowed
 setLong :: Long -> Long -> Emulator ()
 setLong a l = do
-    setWord a       (fromIntegral (rem (fromIntegral l) 256 * 256))
-    setWord (a + 2) (fromIntegral (div (fromIntegral l) 256 * 256))
+    setWord a       (fromIntegral (div (fromIntegral l) (256 * 256)))
+    setWord (a + 2) (fromIntegral (rem (fromIntegral l) (256 * 256)))
 
 
 getMemory :: Long -> Int -> Emulator Long

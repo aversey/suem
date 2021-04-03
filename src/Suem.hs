@@ -201,9 +201,7 @@ doInstruction opcode
                (extractBits opcode [8..9])
                (extractBits opcode [10..12])
                (extractBits opcode [13..15])
-    | (extractBits opcode [0..7]) == 0b01100000 =
-        doBRA (extractBits opcode [8..15])
-    | (extractBits opcode [0..7]) == 0b01100000 =
+    | (extractBits opcode [0..7]) == 0b01100001 =
         doBSR (extractBits opcode [8..15])
     | (extractBits opcode [0..3]) == 0b0110 =
         doBcc (extractBits opcode [4..7])

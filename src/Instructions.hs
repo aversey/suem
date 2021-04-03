@@ -152,7 +152,11 @@ doRTE :: Emulator ()
 doRTE = error "RTE"
 
 doRTS :: Emulator ()
-doRTS = error "RTS"
+doRTS = do
+    sp <- readA 7 4
+    writeA 7 4 (sp + 4)
+    addr <- getMemory sp 4
+    writePC addr
 
 doTRAPV :: Emulator ()
 doTRAPV = error "TRAPV"
@@ -187,21 +191,24 @@ doADDQ _ _ _ _ = error "ADDQ"
 doSUBQ :: Int -> Int -> Int -> Int -> Emulator ()
 doSUBQ _ _ _ _ = error "SUBQ"
 
-doBRA :: Int -> Emulator ()
-doBRA 0 = do
-    incPC
-    pc <- readPC
-    disp <- getMemory pc 2
-    writePC (pc + disp)
-doBRA disp = do
-    incPC
-    pc <- readPC
-    writePC (pc + (fromIntegral disp))
-
 doBSR :: Int -> Emulator ()
-doBSR _ = error "BSR"
+doBSR disp = do
+    incPC
+    pc <- readPC
+    tmp_disp <- if disp == 0
+        then getMemory pc 2
+        else return $ fromIntegral disp
+    let final_disp = signExtend tmp_disp (if disp == 0 then 2 else 1)
+    writePC $ pc + final_disp
+    let return_address = if disp == 0 then pc + 2 else pc
+    sp <- readA 7 4
+    writeA 7 4 (sp - 4)
+    setMemory (sp - 4) 4 (fromIntegral return_address)
 
 checkBccCondition :: Int -> Emulator Bool
+-- BRA
+checkBccCondition 0 = do
+    return True
 -- BNE
 checkBccCondition 6 = do
     zf <- isZero
@@ -214,10 +221,11 @@ doBcc cc disp = do
     incPC
     pc <- readPC
     check <- checkBccCondition cc
-    the_disp <- if disp == 0
+    tmp_disp <- if disp == 0
         then if check then getMemory pc 2 else return 2
         else if check then return $ fromIntegral disp else return 0
-    writePC $ pc + the_disp
+    let final_disp = signExtend tmp_disp (if disp == 0 then 2 else 1)
+    writePC $ pc + final_disp
 
 doMOVEQ :: Int -> Int -> Emulator ()
 doMOVEQ _ _ = error "MOVEQ"

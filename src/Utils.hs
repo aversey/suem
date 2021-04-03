@@ -64,3 +64,15 @@ checkZero 0 = True
 checkZero _ = False
 
 -- TODO: carry & overflow checkers
+
+-------------------------------------------------------------------------------
+-- Sign extender
+
+signExtend :: Word32 -> Int -> Word32
+signExtend x 1
+    | x < 0x80 = x
+    | otherwise = x + 0xffffff00
+signExtend x 2
+    | x < 0x8000 = x
+    | otherwise = x + 0xffff0000
+signExtend x 4 = x
