@@ -59,7 +59,13 @@ doBSET :: Int -> Int -> Int -> Int -> Emulator ()
 doBSET _ _ _ _ = error "BSET"
 
 doMOVEA :: Int -> Int -> Int -> Int -> Emulator ()
-doMOVEA _ _ _ _ = error "MOVEA"
+doMOVEA size dst_reg src_mode src_reg = do
+    incPC
+    (src_get, src_set) <- getOp src_mode src_reg (getMoveSize size)
+    (dst_get, dst_set) <- getOp 1 dst_reg 4
+    src_val <- src_get
+    let val = signExtend src_val (getMoveSize size)
+    dst_set val
 
 doMOVE :: Int -> Int -> Int -> Int -> Int -> Emulator ()
 doMOVE size dst_reg dst_mode src_mode src_reg = do
@@ -68,7 +74,6 @@ doMOVE size dst_reg dst_mode src_mode src_reg = do
     (dst_get, dst_set) <- getOp dst_mode dst_reg (getMoveSize size)
     src_val <- src_get
     dst_set src_val
-    sv <- isSupervisor
     setNegative (checkNegative src_val (getMoveSize size))
     setZero (checkZero src_val)
     setOverflow False
