@@ -37,3 +37,30 @@ combineLong update base 2 = base .&. 0xFFFF0000 .|. (convertLong update 2)
 combineLong update _    4 = update
 combineLong _      _    s = error $
     "Wrong size (" ++ show s ++ ") of combineLong"
+
+-------------------------------------------------------------------------------
+-- Size Casting
+
+getSize :: Int -> Int
+getSize 0 = 1
+getSize 1 = 2
+getSize 2 = 4
+
+getMoveSize :: Int -> Int
+getMoveSize 1 = 1
+getMoveSize 3 = 2
+getMoveSize 2 = 4
+
+-------------------------------------------------------------------------------
+-- Flag checker
+
+checkNegative :: Word32 -> Int -> Bool
+checkNegative x 1 = x >= 0x80
+checkNegative x 2 = x >= 0x8000
+checkNegative x 4 = x >= 0x80000000
+
+checkZero :: Word32 -> Bool
+checkZero 0 = True
+checkZero _ = False
+
+-- TODO: carry & overflow checkers

@@ -68,6 +68,11 @@ doMOVE size dst_reg dst_mode src_mode src_reg = do
     (dst_get, dst_set) <- getOp dst_mode dst_reg (getMoveSize size)
     src_val <- src_get
     dst_set src_val
+    sv <- isSupervisor
+    setNegative (checkNegative src_val (getMoveSize size))
+    setZero (checkZero src_val)
+    setOverflow False
+    setCarry False
 
 doSRMOVE :: Int -> Int -> Emulator ()
 doSRMOVE _ _ = error "SRMOVE"
@@ -197,7 +202,34 @@ doBSR :: Int -> Emulator ()
 doBSR _ = error "BSR"
 
 doBcc :: Int -> Int -> Emulator ()
-doBcc _ _ = error "Bcc"
+-- NE
+doBcc 6 0 = do
+    incPC
+    pc <- readPC
+    zf <- isZero
+    disp <- getMemory pc 2
+    let real_disp = if not zf then disp else 2
+    writePC (pc + (fromIntegral real_disp))
+doBcc 6 disp = do
+    incPC
+    pc <- readPC
+    zf <- isZero
+    let real_disp = if not zf then disp else 0
+    writePC (pc + (fromIntegral real_disp))
+-- EQ
+doBcc 7 0 = do
+    incPC
+    pc <- readPC
+    zf <- isZero
+    disp <- getMemory pc 2
+    let real_disp = if zf then disp else 2
+    writePC (pc + (fromIntegral real_disp))
+doBcc 7 disp = do
+    incPC
+    pc <- readPC
+    zf <- isZero
+    let real_disp = if zf then disp else 0
+    writePC (pc + (fromIntegral real_disp))
 
 doMOVEQ :: Int -> Int -> Emulator ()
 doMOVEQ _ _ = error "MOVEQ"

@@ -199,12 +199,12 @@ readSR = with sr $ \sr -> do
 isTracing :: Emulator Bool
 isTracing = with sr $ \sr -> do
     sr <- readIORef sr
-    return $ testBit sr 0
+    return $ testBit sr 15
 
 isSupervisor :: Emulator Bool
 isSupervisor = with sr $ \sr -> do
     sr <- readIORef sr
-    return $ testBit sr 2
+    return $ testBit sr 13
 
 interruptLevel :: Emulator Int
 interruptLevel = with sr $ \sr -> do
@@ -214,65 +214,65 @@ interruptLevel = with sr $ \sr -> do
 isExtend :: Emulator Bool
 isExtend = with sr $ \sr -> do
     sr <- readIORef sr
-    return $ testBit sr 11
+    return $ testBit sr 4
 
 isNegative :: Emulator Bool
 isNegative = with sr $ \sr -> do
     sr <- readIORef sr
-    return $ testBit sr 12
+    return $ testBit sr 3
 
 isZero :: Emulator Bool
 isZero = with sr $ \sr -> do
     sr <- readIORef sr
-    return $ testBit sr 13
+    return $ testBit sr 2
 
 isOverflow :: Emulator Bool
 isOverflow = with sr $ \sr -> do
     sr <- readIORef sr
-    return $ testBit sr 14
+    return $ testBit sr 1
 
 isCarry :: Emulator Bool
 isCarry = with sr $ \sr -> do
     sr <- readIORef sr
-    return $ testBit sr 15
+    return $ testBit sr 0
 
 
 setTracing :: Bool -> Emulator ()
 setTracing b = with sr $ \sr -> do
     srval <- readIORef sr
-    writeIORef sr $ (if b then setBit else clearBit) srval 0
+    writeIORef sr $ (if b then setBit else clearBit) srval 15
 
 setSupervisor :: Bool -> Emulator ()
 setSupervisor b = with sr $ \sr -> do
     srval <- readIORef sr
-    writeIORef sr $ (if b then setBit else clearBit) srval 2
+    writeIORef sr $ (if b then setBit else clearBit) srval 13
 
 -- setInterruptLevel :: Int -> Emulator ()
 
 setExtend :: Bool -> Emulator ()
 setExtend b = with sr $ \sr -> do
     srval <- readIORef sr
-    writeIORef sr $ (if b then setBit else clearBit) srval 11
+    writeIORef sr $ (if b then setBit else clearBit) srval 4
 
 setNegative :: Bool -> Emulator ()
 setNegative b = with sr $ \sr -> do
     srval <- readIORef sr
-    writeIORef sr $ (if b then setBit else clearBit) srval 12
+    writeIORef sr $ (if b then setBit else clearBit) srval 3
 
 setZero :: Bool -> Emulator ()
 setZero b = with sr $ \sr -> do
     srval <- readIORef sr
-    writeIORef sr $ (if b then setBit else clearBit) srval 13
+    writeIORef sr $ (if b then setBit else clearBit) srval 2
 
 setOverflow :: Bool -> Emulator ()
 setOverflow b = with sr $ \sr -> do
     srval <- readIORef sr
-    writeIORef sr $ (if b then setBit else clearBit) srval 14
+    writeIORef sr $ (if b then setBit else clearBit) srval 1
 
 setCarry :: Bool -> Emulator ()
 setCarry b = with sr $ \sr -> do
     srval <- readIORef sr
-    writeIORef sr $ (if b then setBit else clearBit) srval 15
+    writeIORef sr $ (if b then setBit else clearBit) srval 0
 
 
 -------------------------------------------------------------------------------
@@ -417,16 +417,3 @@ getOp 7 4 s = do
     skipOp s
     let naddr = addr + if s == 1 then 1 else 0
     return (getMemory naddr s, setMemory naddr s)
-
--------------------------------------------------------------------------------
--- Size converter
-
-getSize :: Int -> Int
-getSize 0 = 1
-getSize 1 = 2
-getSize 2 = 4
-
-getMoveSize :: Int -> Int
-getMoveSize 1 = 1
-getMoveSize 3 = 2
-getMoveSize 2 = 4
