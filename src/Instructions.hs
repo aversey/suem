@@ -284,13 +284,51 @@ doAND :: Int -> Int -> Int -> Int -> Int -> Emulator ()
 doAND _ _ _ _ _ = error "AND"
 
 doADDA :: Int -> Int -> Int -> Int -> Emulator ()
-doADDA _ _ _ _ = error "ADDA"
+doADDA dst_reg 0 src_mode src_reg = do
+    incPC
+    (src_get, src_set) <- getOp src_mode src_reg 4
+    src_val <- src_get
+    dst_val <- readA dst_reg 4
+    let value = src_val + dst_val
+    writeA dst_reg 4 value
+    setNegative (checkNegative value 4)
+    setZero (checkZero value)
+--TODO flags
+doADDA src_reg 1 dst_mode dst_reg = do
+    incPC
+    (dst_get, dst_set) <- getOp dst_mode dst_reg 4
+    src_val <- readA src_reg 4
+    dst_val <- dst_get
+    let value = src_val + dst_val
+    dst_set value
+    setNegative (checkNegative value 4)
+    setZero (checkZero value)
+-- TODO flags
 
 doADDX :: Int -> Int -> Int -> Int -> Emulator ()
 doADDX _ _ _ _ = error "ADDX"
 
 doADD :: Int -> Int -> Int -> Int -> Int -> Emulator ()
-doADD _ _ _ _ _ = error "ADD"
+doADD dst_reg 0 size src_mode src_reg = do
+    incPC
+    (src_get, src_set) <- getOp src_mode src_reg (getSize size)
+    src_val <- src_get
+    dst_val <- readD dst_reg (getSize size)
+    let value = src_val + dst_val
+    writeD dst_reg (getSize size) value
+    setNegative (checkNegative value (getSize size))
+    setZero (checkZero value)
+-- TODO flags
+doADD src_reg 1 size dst_mode dst_reg = do
+    incPC
+    (dst_get, dst_set) <- getOp dst_mode dst_reg (getSize size)
+    src_val <- readD src_reg (getSize size)
+    dst_val <- dst_get
+    let value = src_val + dst_val
+    dst_set value
+    setNegative (checkNegative value (getSize size))
+    setZero (checkZero value)
+-- TODO flags
 
 doASD :: Int -> Int -> Int -> Emulator ()
 doASD _ _ _ = error "ASD"
