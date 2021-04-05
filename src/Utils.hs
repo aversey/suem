@@ -46,6 +46,10 @@ getSize 0 = 1
 getSize 1 = 2
 getSize 2 = 4
 
+getShortSize :: Int -> Int
+getShortSize 0 = 2
+getShortSize 1 = 4
+
 getMoveSize :: Int -> Int
 getMoveSize 1 = 1
 getMoveSize 3 = 2

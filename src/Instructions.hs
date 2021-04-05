@@ -61,21 +61,21 @@ doBSET _ _ _ _ = error "BSET"
 doMOVEA :: Int -> Int -> Int -> Int -> Emulator ()
 doMOVEA size dst_reg src_mode src_reg = do
     incPC
-    (src_get, src_set) <- getOp src_mode src_reg (getMoveSize size)
+    (src_get, src_set) <- getOp src_mode src_reg $ getMoveSize size
     (dst_get, dst_set) <- getOp 1 dst_reg 4
     src_val <- src_get
-    let val = signExtend src_val (getMoveSize size)
+    let val = signExtend src_val $ getMoveSize size
     dst_set val
 
 doMOVE :: Int -> Int -> Int -> Int -> Int -> Emulator ()
 doMOVE size dst_reg dst_mode src_mode src_reg = do
     incPC
-    (src_get, src_set) <- getOp src_mode src_reg (getMoveSize size)
-    (dst_get, dst_set) <- getOp dst_mode dst_reg (getMoveSize size)
+    (src_get, src_set) <- getOp src_mode src_reg $ getMoveSize size
+    (dst_get, dst_set) <- getOp dst_mode dst_reg $ getMoveSize size
     src_val <- src_get
     dst_set src_val
-    setNegative (checkNegative src_val (getMoveSize size))
-    setZero (checkZero src_val)
+    setNegative $ checkNegative src_val $ getMoveSize size
+    setZero $ checkZero src_val
     setOverflow False
     setCarry False
 
@@ -208,7 +208,7 @@ doBSR disp = do
     let return_address = if disp == 0 then pc + 2 else pc
     sp <- readA 7 4
     writeA 7 4 (sp - 4)
-    setMemory (sp - 4) 4 (fromIntegral return_address)
+    setMemory (sp - 4) 4 $ fromIntegral return_address
 
 checkBccCondition :: Int -> Emulator Bool
 -- BRA
@@ -248,19 +248,63 @@ doOR :: Int -> Int -> Int -> Int -> Int -> Emulator ()
 doOR _ _ _ _ _ = error "OR"
 
 doSUBA :: Int -> Int -> Int -> Int -> Emulator ()
-doSUBA _ _ _ _ = error "SUBA"
+doSUBA dst_reg size src_mode src_reg = do
+    incPC
+    (src_get, src_set) <- getOp src_mode src_reg $ getShortSize size
+    src_val <- src_get
+    dst_val <- readA dst_reg 4
+    let value = dst_val - (signExtend src_val $ getShortSize size)
+    writeA dst_reg 4 value
+    setNegative $ checkNegative value 4
+    setZero $ checkZero value
+-- TODO flags
 
 doSUBX :: Int -> Int -> Int -> Int -> Emulator ()
 doSUBX _ _ _ _ = error "SUBX"
 
 doSUB :: Int -> Int -> Int -> Int -> Int -> Emulator ()
-doSUB _ _ _ _ _ = error "SUB"
+doSUB dst_reg 0 size src_mode src_reg = do
+    incPC
+    (src_get, src_set) <- getOp src_mode src_reg $ getSize size
+    src_val <- src_get
+    dst_val <- readD dst_reg (getSize size)
+    let value = dst_val - src_val
+    writeD dst_reg (getSize size) value
+    setNegative $ checkNegative value $ getSize size
+    setZero $ checkZero value
+-- TODO flags
+doSUB src_reg 1 size dst_mode dst_reg = do
+    incPC
+    (dst_get, dst_set) <- getOp dst_mode dst_reg $ getSize size
+    src_val <- readD src_reg (getSize size)
+    dst_val <- dst_get
+    let value = dst_val - src_val
+    dst_set value
+    setNegative $ checkNegative value $ getSize size
+    setZero $ checkZero value
+-- TODO flags
 
 doCMPA :: Int -> Int -> Int -> Int -> Emulator ()
-doCMPA _ _ _ _ = error "CMPA"
+doCMPA dst_reg size src_mode src_reg = do
+    incPC
+    (src_get, src_set) <- getOp src_mode src_reg $ getShortSize size
+    src_val <- src_get
+    dst_val <- readA dst_reg 4
+    let value = dst_val - (signExtend src_val $ getShortSize size)
+    setNegative $ checkNegative value 4
+    setZero $ checkZero value
+-- TODO flags
 
 doCMP :: Int -> Int -> Int -> Int -> Emulator ()
-doCMP _ _ _ _ = error "CMP"
+doCMP dst_reg size src_mode src_reg = do
+    incPC
+    (src_get, src_set) <- getOp src_mode src_reg $ getSize size
+    src_val <- src_get
+    dst_val <- readD dst_reg (getSize size)
+    let value = dst_val - src_val
+    setNegative $ checkNegative value $ getSize size
+    setZero $ checkZero value
+-- TODO flags
 
 doCMPM :: Int -> Int -> Int -> Emulator ()
 doCMPM _ _ _ = error "CMPM"
@@ -284,25 +328,15 @@ doAND :: Int -> Int -> Int -> Int -> Int -> Emulator ()
 doAND _ _ _ _ _ = error "AND"
 
 doADDA :: Int -> Int -> Int -> Int -> Emulator ()
-doADDA dst_reg 0 src_mode src_reg = do
+doADDA dst_reg size src_mode src_reg = do
     incPC
-    (src_get, src_set) <- getOp src_mode src_reg 4
+    (src_get, src_set) <- getOp src_mode src_reg $ getShortSize size
     src_val <- src_get
     dst_val <- readA dst_reg 4
-    let value = src_val + dst_val
+    let value = dst_val + (signExtend src_val $ getShortSize size)
     writeA dst_reg 4 value
-    setNegative (checkNegative value 4)
-    setZero (checkZero value)
---TODO flags
-doADDA src_reg 1 dst_mode dst_reg = do
-    incPC
-    (dst_get, dst_set) <- getOp dst_mode dst_reg 4
-    src_val <- readA src_reg 4
-    dst_val <- dst_get
-    let value = src_val + dst_val
-    dst_set value
-    setNegative (checkNegative value 4)
-    setZero (checkZero value)
+    setNegative $ checkNegative value 4
+    setZero $ checkZero value
 -- TODO flags
 
 doADDX :: Int -> Int -> Int -> Int -> Emulator ()
@@ -311,23 +345,23 @@ doADDX _ _ _ _ = error "ADDX"
 doADD :: Int -> Int -> Int -> Int -> Int -> Emulator ()
 doADD dst_reg 0 size src_mode src_reg = do
     incPC
-    (src_get, src_set) <- getOp src_mode src_reg (getSize size)
+    (src_get, src_set) <- getOp src_mode src_reg $ getSize size
     src_val <- src_get
     dst_val <- readD dst_reg (getSize size)
-    let value = src_val + dst_val
+    let value = dst_val + src_val
     writeD dst_reg (getSize size) value
-    setNegative (checkNegative value (getSize size))
-    setZero (checkZero value)
+    setNegative $ checkNegative value $ getSize size
+    setZero $ checkZero value
 -- TODO flags
 doADD src_reg 1 size dst_mode dst_reg = do
     incPC
-    (dst_get, dst_set) <- getOp dst_mode dst_reg (getSize size)
+    (dst_get, dst_set) <- getOp dst_mode dst_reg $ getSize size
     src_val <- readD src_reg (getSize size)
     dst_val <- dst_get
-    let value = src_val + dst_val
+    let value = dst_val + src_val
     dst_set value
-    setNegative (checkNegative value (getSize size))
-    setZero (checkZero value)
+    setNegative $ checkNegative value $ getSize size
+    setZero $ checkZero value
 -- TODO flags
 
 doASD :: Int -> Int -> Int -> Emulator ()
