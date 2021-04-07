@@ -6,7 +6,7 @@ import qualified Data.Vector.Unboxed as V
 import qualified Data.Vector.Unboxed.Mutable as VM
 import Prelude hiding (Word)
 import Data.Word (Word32, Word16, Word8)
-import Data.Bits (testBit, setBit, clearBit)
+import Data.Bits (testBit, setBit, clearBit, (.&.), (.|.), shift)
 import Data.IORef
 import Control.Monad
 import Control.Monad.IO.Class (liftIO)
@@ -191,6 +191,11 @@ incPC = with pc $ \pc -> do
 -------------------------------------------------------------------------------
 -- Status Register Access
 
+writeSR :: Word -> Emulator ()
+writeSR v = with sr $ \sr -> do
+    writeIORef sr v
+
+readSR :: Emulator Word
 readSR = with sr $ \sr -> do
     sr <- readIORef sr
     return sr
@@ -247,7 +252,10 @@ setSupervisor b = with sr $ \sr -> do
     srval <- readIORef sr
     writeIORef sr $ (if b then setBit else clearBit) srval 13
 
--- setInterruptLevel :: Int -> Emulator ()
+setInterruptLevel :: Int -> Emulator ()
+setInterruptLevel v = do
+    srv <- readSR
+    writeSR $ srv .&. fromIntegral 0xF8FF .|. fromIntegral (shift v 16)
 
 setExtend :: Bool -> Emulator ()
 setExtend b = with sr $ \sr -> do
