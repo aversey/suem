@@ -14,6 +14,7 @@ import Data.IP
 import Network.Socket
 import Numeric
 import Machine
+import Control
 import Instructions
 import Utils
 import Device
@@ -441,12 +442,14 @@ makeSocket :: Maybe ConfigSocket -> IO (Maybe Socket)
 makeSocket (Just (ConfigUnix a)) = do
     sock <- socket AF_UNIX Stream defaultProtocol
     Network.Socket.bind sock $ SockAddrUnix a
+    Network.Socket.listen sock 1024
     return $ Just sock
 makeSocket (Just (ConfigInet a)) = do
     sock <- socket AF_INET Stream defaultProtocol
     Network.Socket.bind sock $ SockAddrInet
                                 (read $ tail $ dropWhile (/= ':') a)
                                 (ipString    $ takeWhile (/= ':') a)
+    Network.Socket.listen sock 1024
     return $ Just sock
 makeSocket Nothing = return Nothing
 

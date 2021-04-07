@@ -3,6 +3,7 @@ module Instructions where
 
 import Prelude hiding (Word)
 import Machine
+import Control
 import Utils
 import Data.IORef
 
