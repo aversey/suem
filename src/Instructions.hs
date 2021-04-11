@@ -5,6 +5,7 @@ import Prelude hiding (Word)
 import Machine
 import Control
 import Utils
+import Data.Bits ((.&.))
 import Data.IORef
 
 
@@ -21,7 +22,14 @@ doANDICCR :: Emulator ()
 doANDICCR = error "ANDICCR"
 
 doANDISR :: Emulator ()
-doANDISR = error "ANDISR"
+doANDISR = do
+    incPC
+    (src_get, src_set) <- getOp 7 4 2
+    src_val <- src_get
+    dst_val <- readSR
+    let value = (fromIntegral dst_val) .&. src_val
+    writeSR $ fromIntegral value
+-- TODO flags
 
 doANDI :: Int -> Int -> Int -> Emulator ()
 doANDI _ _ _ = error "ANDI"
@@ -155,14 +163,20 @@ doSTOP :: Emulator ()
 doSTOP = error "STOP"
 
 doRTE :: Emulator ()
-doRTE = error "RTE"
+doRTE = do
+    sp <- readA 7 4
+    writeA 7 4 (sp + 6)
+    sr <- getMemory sp 2
+    writeSR $ fromIntegral sr
+    pc <- getMemory (sp + 2) 4
+    writePC pc
 
 doRTS :: Emulator ()
 doRTS = do
     sp <- readA 7 4
     writeA 7 4 (sp + 4)
-    addr <- getMemory sp 4
-    writePC addr
+    pc <- getMemory sp 4
+    writePC pc
 
 doTRAPV :: Emulator ()
 doTRAPV = error "TRAPV"
@@ -388,3 +402,16 @@ doROXdR _ _ _ _ _ = error "ROXdR"
 
 doROdR :: Int -> Int -> Int -> Int -> Int -> Emulator ()
 doROdR _ _ _ _ _ = error "ROdR"
+
+doInterrupt :: Emulator ()
+doInterrupt = do
+    pc <- readPC
+    ihandler <- getMemory 100 4
+    writePC ihandler
+    sr <- readSR
+    setSupervisor True
+    setInterruptLevel 1
+    sp <- readA 7 4
+    writeA 7 4 (sp - 6)
+    setMemory (sp - 4) 4 pc
+    setMemory (sp - 6) 2 $ fromIntegral sr
