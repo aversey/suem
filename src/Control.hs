@@ -276,6 +276,7 @@ setByte :: Long -> Byte -> Emulator ()
 setByte a b | a < 0x8 = return ()
             | a < 0x7e0000 = with ram $ \ram ->
                 VM.write ram (fromIntegral a) b
+            | a < 0x800000 = return ()
             | otherwise = deviceSetByte a b
 
  -- TODO: only even addresses are allowed

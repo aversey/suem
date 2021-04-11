@@ -12,6 +12,7 @@ import Control.Monad.IO.Class (liftIO)
 import Control.Monad.Reader (MonadReader, ReaderT, ask)
 import Control.Monad.Trans (MonadIO)
 import Network.Socket
+import System.IO
 import Utils
 
 
@@ -35,7 +36,15 @@ data Machine = Machine {
     s4  :: Maybe Socket,
     s5  :: Maybe Socket,
     s6  :: Maybe Socket,
-    s7  :: Maybe Socket
+    s7  :: Maybe Socket,
+    c0  :: IORef (Maybe Handle),
+    c1  :: IORef (Maybe Handle),
+    c2  :: IORef (Maybe Handle),
+    c3  :: IORef (Maybe Handle),
+    c4  :: IORef (Maybe Handle),
+    c5  :: IORef (Maybe Handle),
+    c6  :: IORef (Maybe Handle),
+    c7  :: IORef (Maybe Handle)
 }
 
 -- Emulator is a monad which contains Machine and allows easy change of it.

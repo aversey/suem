@@ -9,7 +9,7 @@ inet_socket :: String -> Parser ConfigSocket
 inet_socket sock = ConfigInet <$> strOption
   (  long ("i" ++ sock)
   <> metavar ("ADDR_" ++ sock)
-  <> help ("Address for internet socket " ++ sock) )
+  <> help ("Port for internet socket " ++ sock) )
 
 unix_socket :: String -> Parser ConfigSocket
 unix_socket sock = ConfigUnix <$> strOption

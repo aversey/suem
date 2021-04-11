@@ -434,10 +434,6 @@ data Config = Config Int      -- frequence
                      (Maybe ConfigSocket)
                      (Maybe ConfigSocket)
 
-ipString :: String -> Word32
-ipString = fromIntegral . sum . map (\(n,o) -> toInteger o * 256 ^ n)
-         . zip [0..] . reverse . fromIPv4 . read
-
 makeSocket :: Maybe ConfigSocket -> IO (Maybe Socket)
 makeSocket (Just (ConfigUnix a)) = do
     sock <- socket AF_UNIX Stream defaultProtocol
@@ -446,9 +442,7 @@ makeSocket (Just (ConfigUnix a)) = do
     return $ Just sock
 makeSocket (Just (ConfigInet a)) = do
     sock <- socket AF_INET Stream defaultProtocol
-    Network.Socket.bind sock $ SockAddrInet
-                                (read $ tail $ dropWhile (/= ':') a)
-                                (ipString    $ takeWhile (/= ':') a)
+    Network.Socket.bind sock $ SockAddrInet (read a) 0x0100007f
     Network.Socket.listen sock 1024
     return $ Just sock
 makeSocket Nothing = return Nothing
@@ -478,8 +472,17 @@ makeMachine ramData romData s0 s1 s2 s3 s4 s5 s6 s7 = do
     ms5 <- makeSocket s5
     ms6 <- makeSocket s6
     ms7 <- makeSocket s7
+    mc0 <- newIORef Nothing
+    mc1 <- newIORef Nothing
+    mc2 <- newIORef Nothing
+    mc3 <- newIORef Nothing
+    mc4 <- newIORef Nothing
+    mc5 <- newIORef Nothing
+    mc6 <- newIORef Nothing
+    mc7 <- newIORef Nothing
     return $ Machine pc sr drs ars usp ssp ramData romData
                      ms0 ms1 ms2 ms3 ms4 ms5 ms6 ms7
+                     mc0 mc1 mc2 mc3 mc4 mc5 mc6 mc7
     where pcval = (fromIntegral $ romData V.! 4) * 256 * 256 * 256 +
                   (fromIntegral $ romData V.! 5) * 256 * 256 +
                   (fromIntegral $ romData V.! 6) * 256 +
