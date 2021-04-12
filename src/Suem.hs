@@ -483,6 +483,7 @@ makeMachine ramData romData s0 s1 s2 s3 s4 s5 s6 s7 = do
     return $ Machine pc sr drs ars usp ssp ramData romData
                      ms0 ms1 ms2 ms3 ms4 ms5 ms6 ms7
                      mc0 mc1 mc2 mc3 mc4 mc5 mc6 mc7
+                     interruptLevel doInterrupt
     where pcval = (fromIntegral $ romData V.! 4) * 256 * 256 * 256 +
                   (fromIntegral $ romData V.! 5) * 256 * 256 +
                   (fromIntegral $ romData V.! 6) * 256 +

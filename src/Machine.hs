@@ -44,7 +44,10 @@ data Machine = Machine {
     c4  :: IORef (Maybe Handle),
     c5  :: IORef (Maybe Handle),
     c6  :: IORef (Maybe Handle),
-    c7  :: IORef (Maybe Handle)
+    c7  :: IORef (Maybe Handle),
+    -- Deps for Devices
+    getFnInterruptLevel :: Emulator Int,
+    getFnDoInterrupt    :: Emulator ()
 }
 
 -- Emulator is a monad which contains Machine and allows easy change of it.

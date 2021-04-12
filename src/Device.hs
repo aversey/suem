@@ -91,7 +91,14 @@ readOk h = do
     else if line == fromString device_bad
          then error "Device sent BAD signal."
          else if line == fromString device_interrupt
-              then readOk h -- doInterrupt
+              then do
+                  m <- ask
+                  interruptLevel <- getFnInterruptLevel m
+                  if interruptLevel == 0
+                  then do
+                      getFnDoInterrupt m
+                      readOk h
+                  else readOk h
               else error "Unknown Device Protocol Line."
 
 readOkWord :: Handle -> Emulator Word
@@ -103,7 +110,33 @@ readOkWord h = do
     else if line == fromString device_bad
          then error "Device sent BAD signal."
          else if line == fromString device_interrupt
-              then readOkWord h -- doInterrupt
+              then do
+                  m <- ask
+                  interruptLevel <- getFnInterruptLevel m
+                  if interruptLevel == 0
+                  then do
+                      getFnDoInterrupt m
+                      readOkWord h
+                  else readOkWord h
+              else error "Unknown Device Protocol Line."
+
+readOkByte :: Handle -> Emulator Byte
+readOkByte h = do
+    line <- liftIO $ Data.ByteString.hGetLine h
+    if fromString device_ok `Data.ByteString.isPrefixOf` line
+    then let (_:ltail) = Prelude.drop (Prelude.length device_ok) (toStr line)
+        in return $ fromIntegral $ fromHex ltail 2 (fromIntegral 0)
+    else if line == fromString device_bad
+         then error "Device sent BAD signal."
+         else if line == fromString device_interrupt
+              then do
+                  m <- ask
+                  interruptLevel <- getFnInterruptLevel m
+                  if interruptLevel == 0
+                  then do
+                      getFnDoInterrupt m
+                      readOkByte h
+                  else readOkByte h
               else error "Unknown Device Protocol Line."
 
 
@@ -111,8 +144,25 @@ readOkWord h = do
 -- Memory
 
 deviceGetByte :: Long -> Emulator Byte
-deviceGetByte a | a `mod` 2 == 0 = return 0xFF
-                | otherwise = return 0xFF
+deviceGetByte a
+    | a `mod` 2 == 0 = do
+        handle <- getSock a
+        if handle == Nothing
+        then return 0xff
+        else do
+            let (Just h) = handle
+            liftIO $ hPut h $ fromString $
+                device_get_high_byte ++ " " ++ toHex a 5 ++"\n"
+            readOkByte h
+    | otherwise = do
+        handle <- getSock a
+        if handle == Nothing
+        then return 0xff
+        else do
+            let (Just h) = handle
+            liftIO $ hPut h $ fromString $
+                device_get_low_byte ++ " " ++ toHex a 5 ++"\n"
+            readOkByte h
 
 deviceGetWord :: Long -> Emulator Word
 deviceGetWord a = do
