@@ -1,0 +1,25 @@
+name: suem-video
+version: 0.1.0.0
+synopsis: Suem video device
+license: OtherLicense
+
+extra-source-files:
+- README
+
+ghc-options: -O2 -optl-pthread
+
+dependencies:
+- base >= 4.7 && < 5
+- bytestring
+- optparse-applicative
+- network
+- gloss
+
+library:
+  source-dirs: src
+
+executable:
+  main: Main.hs
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  dependencies:
+  - suem-video
