@@ -6,7 +6,7 @@ import Video
 
 
 inet_socket :: Parser ConfigSocket
-inet_socket = ConfigInet <$> strOption
+inet_socket = ConfigInet <$> option auto
   (  long "inet"
   <> short 'i'
   <> metavar "ADDR"
