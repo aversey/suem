@@ -152,7 +152,7 @@ deviceGetByte a
         else do
             let (Just h) = handle
             liftIO $ hPut h $ fromString $
-                device_get_high_byte ++ " " ++ toHex a 5 ++"\n"
+                device_get_high_byte ++ " " ++ toHex a 5 ++ "\n"
             readOkByte h
     | otherwise = do
         handle <- getSock a
@@ -161,7 +161,7 @@ deviceGetByte a
         else do
             let (Just h) = handle
             liftIO $ hPut h $ fromString $
-                device_get_low_byte ++ " " ++ toHex a 5 ++"\n"
+                device_get_low_byte ++ " " ++ toHex a 5 ++ "\n"
             readOkByte h
 
 deviceGetWord :: Long -> Emulator Word
@@ -172,7 +172,7 @@ deviceGetWord a = do
     else do
         let (Just h) = handle
         liftIO $ hPut h $ fromString $
-            device_get_word ++ " " ++ toHex a 5 ++"\n"
+            device_get_word ++ " " ++ toHex a 5 ++ "\n"
         readOkWord h
 
 
